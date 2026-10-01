@@ -1,5 +1,13 @@
+import {
+  ClerkProvider,
+  Show,
+  SignInButton,
+  SignUpButton,
+  UserButton,
+} from "@clerk/nextjs";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import Link from "next/link";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -23,7 +31,46 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <ClerkProvider
+          signInUrl="/sign-in"
+          signUpUrl="/sign-up"
+          signInFallbackRedirectUrl="/"
+          signUpFallbackRedirectUrl="/"
+          afterSignOutUrl="/"
+        >
+          <header className="flex min-h-20 items-center justify-between gap-4 border-b border-foreground/10 px-6 py-4">
+            <Link href="/" className="font-semibold">
+              {/* navigation */}
+              LIC Porchlight
+            </Link>
+            <nav aria-label="Account" className="flex items-center gap-3">
+              <Show when="signed-out">
+                <SignInButton>
+                  <button
+                    type="button"
+                    className="cursor-pointer rounded-lg px-4 py-2 text-sm font-medium hover:bg-foreground/5"
+                  >
+                    Sign in
+                  </button>
+                </SignInButton>
+                <SignUpButton>
+                  <button
+                    type="button"
+                    className="cursor-pointer rounded-lg bg-foreground px-4 py-2 text-sm font-medium text-background hover:opacity-80"
+                  >
+                    Sign up
+                  </button>
+                </SignUpButton>
+              </Show>
+              <Show when="signed-in"> {/* when signed in show userbutton*/}
+                <UserButton />
+              </Show>
+            </nav>
+          </header>
+          {children}
+        </ClerkProvider>
+      </body>
     </html>
   );
 }

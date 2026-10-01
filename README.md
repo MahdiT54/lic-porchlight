@@ -16,6 +16,14 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+## Authentication
+
+Clerk provides sign-in at `/sign-in`, sign-up at `/sign-up`, and account management through the profile button in the header. Set `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` and `CLERK_SECRET_KEY` for the same Clerk application in `.env.local` before running `pnpm dev`. Keep the secret key server-side; environment files are ignored by Git.
+
+The provider in `app/layout.tsx` configures the local authentication URLs and returns users to `/` after authentication unless a return URL was supplied. `proxy.ts` makes Clerk sessions available. All current pages are public; protect future private pages, server actions, and API handlers with `await auth.protect()` from `@clerk/nextjs/server` where the protected data is accessed.
+
+After starting the app, use **Sign up** to create a test user and verify that the profile button appears. It includes account management and sign-out controls.
+
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
