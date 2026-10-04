@@ -16,6 +16,27 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+## Sanity Studio
+
+Sanity Studio is embedded at [http://localhost:3000/studio](http://localhost:3000/studio) and runs with `pnpm dev`. It connects to project `4w4k1kf5` and the `production` dataset. Sign in with a Sanity account that has access to that project.
+
+Set these public configuration values in `.env.local`:
+
+```dotenv
+NEXT_PUBLIC_SANITY_PROJECT_ID=4w4k1kf5
+NEXT_PUBLIC_SANITY_DATASET=production
+```
+
+The clean template starts with no document types. Add content schemas in `sanity/schema-types/` and register them in `sanity/schema-types/index.ts`. The Studio configuration is in `sanity.config.ts`, and the frontend client and image helper are in `sanity/lib/`.
+
+If Studio reports a CORS error, add the local development origin to the project:
+
+```bash
+pnpm exec sanity cors add http://localhost:3000 --credentials
+```
+
+The failed initializer used `--output-path studio` while detecting this existing Next.js app. This CLI version checks for `studio/package.json` before creating that folder. For an embedded Studio, run the initializer from the Next.js root without `--output-path studio`; the files above already complete that setup.
+
 ## Authentication
 
 Clerk provides sign-in at `/sign-in`, sign-up at `/sign-up`, and account management through the profile button in the header. Set `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` and `CLERK_SECRET_KEY` for the same Clerk application in `.env.local` before running `pnpm dev`. Keep the secret key server-side; environment files are ignored by Git.
