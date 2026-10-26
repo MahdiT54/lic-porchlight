@@ -1,9 +1,13 @@
 import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata, Viewport } from "next";
-import { Geist_Mono, Inter, Plus_Jakarta_Sans } from "next/font/google";
+import { Geist_Mono, Inter, Plus_Jakarta_Sans, Geist } from "next/font/google";
 // import { Toaster } from "@/components/ui/sonner";
 // import { SanityLive } from "@/lib/sanity/live";
 import "./globals.css";
+import { cn } from "@/lib/utils";
+
+const geist = Geist({subsets:['latin'],variable:'--font-sans'});
+
 
 // Body font - highly readable
 const inter = Inter({
@@ -84,7 +88,7 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <html lang="en" suppressHydrationWarning>
+      <html lang="en" suppressHydrationWarning className={cn("font-sans", geist.variable)}>
         <head>
           {/* Preconnect to external domains for performance */}
           <link rel="preconnect" href="https://cdn.sanity.io" />
