@@ -34,7 +34,7 @@ export const metadata: Metadata = {
   },
   description:
     "Making your first home journey simple and stress-free. Browse properties, save favorites, and connect with trusted agents.",
-  keywords: [
+  keywords: [ // SEO by LIC's finest
     "real estate",
     "homes for sale",
     "first-time homebuyer",
