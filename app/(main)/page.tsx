@@ -12,12 +12,12 @@ import { PropertyGrid } from "@/components/property/PropertyGrid";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { FEATURED_PROPERTIES_QUERY } from "@/lib/sanity/queries";
-import { sanityFetch } from "@/sanity/lib/live";
+import { sanityFetch } from "@/sanity/lib/live"; // server component fetcher for sanity queries
 
 export default async function HomePage() {
-  const { data: featuredProperties } = await sanityFetch({
-    query: FEATURED_PROPERTIES_QUERY,
-  });
+  // const { data: featuredProperties } = await sanityFetch({
+  //   query: FEATURED_PROPERTIES_QUERY,
+  // });
 
   return (
     <div>
@@ -122,9 +122,9 @@ export default async function HomePage() {
             </Button>
           </div>
 
-          {featuredProperties && featuredProperties.length > 0 ? (
+          {/* {featuredProperties && featuredProperties.length > 0 ? (
             <PropertyGrid properties={featuredProperties} />
-          ) : (
+          ) : ( */}
             <div className="text-center py-16 bg-accent/50 rounded-2xl border border-border/50">
               <Home
                 className="h-12 w-12 text-muted-foreground mx-auto mb-4"
@@ -137,7 +137,7 @@ export default async function HomePage() {
                 <Link href="/properties">Browse All Properties</Link>
               </Button>
             </div>
-          )}
+          {/* )} */}
         </div>
       </section>
 
