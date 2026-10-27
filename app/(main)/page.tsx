@@ -11,8 +11,8 @@ import Link from "next/link";
 import { PropertyGrid } from "@/components/property/PropertyGrid";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { sanityFetch } from "@/lib/sanity/live";
 import { FEATURED_PROPERTIES_QUERY } from "@/lib/sanity/queries";
+import { sanityFetch } from "@/sanity/lib/live";
 
 export default async function HomePage() {
   const { data: featuredProperties } = await sanityFetch({
