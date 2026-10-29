@@ -1,65 +1,17 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-## Getting Started
+A modern real estate platform that makes buying your first home simple and stress-free.
 
-First, run the development server:
+- Who is this for? First-time homebuyers looking for a clean, intuitive property search experience, AND real estate agents who want to list properties, manage leads, and grow their business.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- What problem does it solve? Traditional real estate platforms are cluttered and overwhelming. Nestwell provides a clean, modern interface with real-time updates, interactive maps, and a seamless agent subscription system.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- Technical highlights:
 
-## Sanity Studio
-
-Sanity Studio is embedded at [http://localhost:3000/studio](http://localhost:3000/studio) and runs with `pnpm dev`. It connects to project `4w4k1kf5` and the `production` dataset. Sign in with a Sanity account that has access to that project.
-
-Set these public configuration values in `.env.local`:
-
-```dotenv
-NEXT_PUBLIC_SANITY_PROJECT_ID=4w4k1kf5
-NEXT_PUBLIC_SANITY_DATASET=production
-```
-
-The clean template starts with no document types. Add content schemas in `sanity/schema-types/` and register them in `sanity/schema-types/index.ts`. The Studio configuration is in `sanity.config.ts`, and the frontend client and image helper are in `sanity/lib/`.
-
-If Studio reports a CORS error, add the local development origin to the project:
-
-```bash
-pnpm exec sanity cors add http://localhost:3000 --credentials
-```
-
-The failed initializer used `--output-path studio` while detecting this existing Next.js app. This CLI version checks for `studio/package.json` before creating that folder. For an embedded Studio, run the initializer from the Next.js root without `--output-path studio`; the files above already complete that setup.
-
-## Authentication
-
-Clerk provides sign-in at `/sign-in`, sign-up at `/sign-up`, and account management through the profile button in the header. Set `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` and `CLERK_SECRET_KEY` for the same Clerk application in `.env.local` before running `pnpm dev`. Keep the secret key server-side; environment files are ignored by Git.
-
-The provider in `app/layout.tsx` configures the local authentication URLs and returns users to `/` after authentication unless a return URL was supplied. `proxy.ts` makes Clerk sessions available. All current pages are public; protect future private pages, server actions, and API handlers with `await auth.protect()` from `@clerk/nextjs/server` where the protected data is accessed.
-
-After starting the app, use **Sign up** to create a test user and verify that the profile button appears. It includes account management and sign-out controls.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Real-time content with Sanity Live (no page refreshes!)
+Sanity Studio as your super admin dashboard
+Clerk Billing integration (no webhooks needed)
+Interactive Mapbox maps with property markers
+Type-safe schemas with auto-generated TypeScript (typegen)
+Server Actions + Server Components for optimal performance
+React 19 + React Compiler for blazing fast renders
