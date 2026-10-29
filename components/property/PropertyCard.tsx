@@ -69,7 +69,7 @@ export function PropertyCard({
           {/* Status Badge */}
           {statusLabel && (
             <Badge
-              variant={property.status === "sold" ? "destructive" : "muted"}
+              variant={property.status === "sold" ? "destructive" : "muted"} // minor fix l8r =)
               className="absolute top-3 left-3 shadow-sm"
             >
               {statusLabel}
