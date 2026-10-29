@@ -1,3 +1,6 @@
+<img width="2144" height="342" alt="lic-porchlight-black-amber" src="https://github.com/user-attachments/assets/3055841b-6947-4630-879c-8b686559b58b" />
+
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 A modern real estate platform that makes buying your first home simple and stress-free.
