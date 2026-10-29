@@ -1,7 +1,7 @@
 "use client";
 
 import type { Property } from "@/types";
-// import { PropertyCard } from "./PropertyCard";
+import { PropertyCard } from "./PropertyCard";
 
 interface PropertyGridProps {
   properties: Property[];
