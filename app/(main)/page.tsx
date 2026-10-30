@@ -17,7 +17,7 @@ import { sanityFetch } from "@/sanity/lib/live"; // server component fetcher for
 export default async function HomePage() {
   // const { data: featuredProperties } = await sanityFetch({
   //   query: FEATURED_PROPERTIES_QUERY,
-  // });
+  // })
 
   return (
     <div>
