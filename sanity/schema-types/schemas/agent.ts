@@ -1,78 +1,76 @@
-import { Contact } from "lucide-react";
 import { defineField, defineType } from "sanity";
 
 export const agent = defineType({
   name: "agent",
-  type: "document",
   title: "Agent",
-  icon: Contact,
+  type: "document",
   fields: [
     defineField({
-      name: "clerkId",
+      name: "userId",
+      title: "Clerk User ID",
       type: "string",
-      title: "Clerk user ID",
-      description:
-        "Set by the authenticated server. Public association only; never use this editable field to grant permissions.",
+      validation: (Rule) => Rule.required(),
       readOnly: true,
-      validation: (r) => r.required().regex(/^user_\S+$/),
     }),
     defineField({
       name: "name",
+      title: "Name",
       type: "string",
-      title: "Public display name",
-      validation: (r) => r.required().max(100),
+      validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: "slug",
-      type: "slug",
-      options: { source: "name" },
-      validation: (r) => r.required(),
+      name: "email",
+      title: "Email",
+      type: "string",
+      validation: (Rule) => Rule.required().email(),
     }),
     defineField({
-      name: "bio",
-      type: "text",
-      rows: 5,
-      validation: (r) => r.max(2000),
+      name: "phone",
+      title: "Phone",
+      type: "string",
     }),
     defineField({
       name: "photo",
+      title: "Photo",
       type: "image",
-      options: { hotspot: true },
-      fields: [
-        defineField({
-          name: "alt",
-          type: "string",
-          validation: (r) => r.required(),
-        }),
-      ],
+      options: {
+        hotspot: true,
+      },
     }),
     defineField({
-      name: "brokerage",
-      type: "string",
-      validation: (r) => r.required(),
+      name: "bio",
+      title: "Bio",
+      type: "text",
+      rows: 4,
     }),
     defineField({
       name: "licenseNumber",
+      title: "License Number",
       type: "string",
-      validation: (r) => r.required(),
     }),
     defineField({
-      name: "licenseState",
+      name: "agency",
+      title: "Agency",
       type: "string",
-      validation: (r) => r.required(),
     }),
     defineField({
-      name: "publicEmail",
-      type: "string",
-      description:
-        "Optional business contact, published publicly. Not the Clerk account email.",
-      validation: (r) => r.email(),
+      name: "onboardingComplete",
+      title: "Onboarding Complete",
+      type: "boolean",
+      initialValue: false,
     }),
     defineField({
-      name: "publicPhone",
-      type: "string",
-      description: "Optional business number, published publicly.",
+      name: "createdAt",
+      title: "Created At",
+      type: "datetime",
+      initialValue: () => new Date().toISOString(),
     }),
   ],
-  preview: { select: { title: "name", subtitle: "brokerage", media: "photo" } },
+  preview: {
+    select: {
+      title: "name",
+      subtitle: "email",
+      media: "photo",
+    },
+  },
 });
