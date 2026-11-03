@@ -5,7 +5,7 @@ const imageFragment = /* groq */ `
    asset-> {
    _id,
    url,
-   metadata {lqip, dimensions} }
+   metadata {lqip, dimensions}
 },
 alt
 `;
@@ -18,6 +18,9 @@ export const FEATURED_PROPERTIES_QUERY = defineQuery(/* groq */ `
     title,
     "slug": slug.current,
     price,
+    propertyType,
+    status,
+    createdAt,
     bedrooms,
     bathrooms,
     squareFeet,
