@@ -70,6 +70,12 @@ export function DashboardSidebar() {
         </Link>
 
         {/* Dashboard header */}
+        <div className="mb-8">
+          <h2 className="text-xl font-bold font-heading">Agent Dashboard</h2>
+          <p className="text-sm text-muted-foreground mt-1">
+            Manage your listings and leads
+          </p>
+        </div>
       </div>
     </aside>
   );
