@@ -9,8 +9,9 @@ import {
   MessageSquare,
   User,
 } from "lucide-react";
-import { usePathname } from "next/dist/client/components/navigation";
-import { Link } from "sanity/router";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
 
 const navItems = [
   {
@@ -29,7 +30,7 @@ const navItems = [
     href: "/dashboard/listings/new",
     label: "Add Listing",
     icon: ListPlus,
-    description: "Create a new property listing",
+    description: "Create new listing",
   },
   {
     href: "/dashboard/leads",
@@ -57,7 +58,7 @@ export function DashboardSidebar() {
   return (
     <aside className="w-72 border-r border-border/50 bg-sidebar min-h-screen sticky top-0">
       <div className="p-6">
-        {/* back link */}
+        {/* Back Link */}
         <Link
           href="/"
           className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-8 group"
@@ -69,13 +70,52 @@ export function DashboardSidebar() {
           <span className="text-sm font-medium">Back to Nestwell</span>
         </Link>
 
-        {/* Dashboard header */}
+        {/* Dashboard Header */}
         <div className="mb-8">
           <h2 className="text-xl font-bold font-heading">Agent Dashboard</h2>
           <p className="text-sm text-muted-foreground mt-1">
             Manage your listings and leads
           </p>
         </div>
+
+        {/* Navigation */}
+        <nav className="space-y-1" aria-label="Dashboard navigation">
+          {navItems.map((item) => {
+            // Check for exact match first
+            const isExactMatch = pathname === item.href;
+            // For startsWith matching, ensure no other nav item is a more specific match
+            const isStartsWithMatch =
+              item.href !== "/dashboard" &&
+              pathname.startsWith(item.href) &&
+              !navItems.some(
+                (other) =>
+                  other.href !== item.href &&
+                  other.href.startsWith(item.href) &&
+                  pathname.startsWith(other.href),
+              );
+            const isActive = isExactMatch || isStartsWithMatch;
+
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={cn(
+                  "flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-[background-color,color,transform] duration-200",
+                  isActive
+                    ? "bg-primary text-primary-foreground shadow-warm"
+                    : "text-muted-foreground hover:text-foreground hover:bg-sidebar-accent",
+                )}
+                aria-current={isActive ? "page" : undefined}
+              >
+                <item.icon
+                  className="h-5 w-5 flex-shrink-0"
+                  aria-hidden="true"
+                />
+                <span>{item.label}</span>
+              </Link>
+            );
+          })}
+        </nav>
       </div>
     </aside>
   );
