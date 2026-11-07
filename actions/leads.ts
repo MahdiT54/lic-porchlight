@@ -69,7 +69,7 @@ export async function createLead(
   requiresOnboarding?: boolean;
   message?: string;
 }> {
-  const { userId } = await auth();
+  const { userId } = await auth();// lets check if the user is authenticated
 
   if (!userId) {
     throw new Error("Not authenticated");
