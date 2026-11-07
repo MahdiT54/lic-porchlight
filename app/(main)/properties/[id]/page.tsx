@@ -20,7 +20,7 @@ import { SharePropertyButton } from "@/components/property/SharePropertyButton";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { StatBadge } from "@/components/ui/stat-badge";
-import { sanityFetch } from "@/lib/sanity/live";
+import { sanityFetch } from "@/sanity/lib/live";
 import { PROPERTY_DETAIL_QUERY } from "@/lib/sanity/queries";
 
 export async function generateMetadata({
