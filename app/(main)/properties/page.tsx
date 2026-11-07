@@ -14,7 +14,7 @@ import { PropertyGrid } from "@/components/property/PropertyGrid";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { sanityFetch } from "@/lib/sanity/live";
+import { sanityFetch } from "@/sanity/lib/live";
 import {
   AMENITIES_QUERY,
   PROPERTIES_COUNT_QUERY,
@@ -47,7 +47,7 @@ interface SearchParams {
   daysOnMarket?: string;
   openHouse?: string;
   priceReduced?: string;
-  amenities?: string;
+  amenities?: string | string[];
 }
 
 export default async function PropertiesPage({
@@ -55,7 +55,13 @@ export default async function PropertiesPage({
 }: {
   searchParams: Promise<SearchParams>;
 }) {
-  const params = await searchParams;
+  const rawParams = await searchParams;
+  const params = {
+    ...rawParams,
+    amenities: Array.isArray(rawParams.amenities)
+      ? rawParams.amenities.join(",")
+      : (rawParams.amenities ?? ""),
+  };
   const page = Number.parseInt(params.page || "1", 10);
   const start = (page - 1) * ITEMS_PER_PAGE;
   const end = start + ITEMS_PER_PAGE;
@@ -162,7 +168,7 @@ export default async function PropertiesPage({
               <Suspense
                 fallback={<Skeleton className="h-[500px] w-full rounded-2xl" />}
               >
-                <FilterSidebar amenities={amenities || []} />
+                <FilterSidebar amenities={amenities || []} values={params} />
               </Suspense>
             </div>
           </aside>
