@@ -12,7 +12,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { DynamicMapView } from "@/components/map/DynamicMapView";
-import { AgentCard } from "@/components/map/AgentCard";
+import { AgentCard } from "@/components/property/AgentCard";
 import { ContactAgentButton } from "@/components/property/ContactAgentButton";
 import { ImageGallery } from "@/components/property/ImageGallery";
 import { SavePropertyButton } from "@/components/property/SavePropertyButton";
