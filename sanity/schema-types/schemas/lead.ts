@@ -1,71 +1,79 @@
-import { Mail } from "lucide-react";
 import { defineField, defineType } from "sanity";
 
 export const lead = defineType({
   name: "lead",
+  title: "Lead",
   type: "document",
-  title: "Inquiry (private dataset only)",
-  icon: Mail,
-  initialValue: { status: "new" },
   fields: [
     defineField({
-      name: "clerkId",
-      type: "string",
-      title: "Submitting Clerk user ID",
-      readOnly: true,
-      description:
-        "Optional for guest inquiries; derive from the server session, never a submitted form field.",
-      validation: (r) => r.regex(/^user_\S+$/),
-    }),
-    defineField({
       name: "property",
+      title: "Property",
       type: "reference",
       to: [{ type: "property" }],
-      validation: (r) => r.required(),
+      validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: "agent",
+      title: "Agent",
       type: "reference",
       to: [{ type: "agent" }],
-      description:
-        "Assigned recipient at submission time; preserve if the listing later changes agent.",
-      validation: (r) => r.required(),
+      validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: "name",
+      name: "buyerName",
+      title: "Buyer Name",
       type: "string",
-      validation: (r) => r.required().max(100),
+      validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: "email",
+      name: "buyerEmail",
+      title: "Buyer Email",
       type: "string",
-      validation: (r) => r.required().email(),
+      validation: (Rule) => Rule.required().email(),
     }),
     defineField({
-      name: "phone",
+      name: "buyerPhone",
+      title: "Buyer Phone",
       type: "string",
-      validation: (r) => r.max(40),
     }),
     defineField({
       name: "message",
+      title: "Message",
       type: "text",
-      rows: 5,
-      validation: (r) => r.required().max(4000),
+      rows: 3,
     }),
     defineField({
       name: "status",
+      title: "Status",
       type: "string",
-      options: { list: ["new", "contacted", "qualified", "closed"] },
-      validation: (r) =>
-        r
-          .required()
-          .custom(
-            (value) =>
-              value === undefined ||
-              ["new", "contacted", "qualified", "closed"].includes(value) ||
-              "Choose a listed value.",
-          ),
+      options: {
+        list: [
+          { title: "New", value: "new" },
+          { title: "Contacted", value: "contacted" },
+          { title: "Closed", value: "closed" },
+        ],
+      },
+      initialValue: "new",
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: "createdAt",
+      title: "Created At",
+      type: "datetime",
+      initialValue: () => new Date().toISOString(),
     }),
   ],
-  preview: { select: { title: "name", subtitle: "status" } },
+  preview: {
+    select: {
+      buyerName: "buyerName",
+      propertyTitle: "property.title",
+      status: "status",
+    },
+    prepare({ buyerName, propertyTitle, status }) {
+      return {
+        title: buyerName,
+        subtitle: `${propertyTitle} - ${status}`,
+      };
+    },
+  },
 });

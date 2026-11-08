@@ -1,39 +1,49 @@
-import { Tag } from "lucide-react";
 import { defineField, defineType } from "sanity";
 
 export const amenity = defineType({
   name: "amenity",
-  type: "document",
   title: "Amenity",
-  icon: Tag,
+  type: "document",
   fields: [
     defineField({
-      name: "title",
+      name: "value",
+      title: "Value",
       type: "string",
-      validation: (r) => r.required().max(80),
+      description: "Unique identifier (e.g., 'pool', 'garage')",
+      validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: "slug",
-      type: "slug",
-      options: { source: "title" },
-      validation: (r) => r.required(),
+      name: "label",
+      title: "Label",
+      type: "string",
+      description: "Display name (e.g., 'Swimming Pool', 'Garage')",
+      validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: "category",
+      name: "icon",
+      title: "Icon",
       type: "string",
-      options: { list: ["interior", "building", "outdoor", "accessibility"] },
-      validation: (r) =>
-        r
-          .required()
-          .custom(
-            (value) =>
-              value === undefined ||
-              ["interior", "building", "outdoor", "accessibility"].includes(
-                value,
-              ) ||
-              "Choose a listed value.",
-          ),
+      description: "Optional icon name (for future use)",
+    }),
+    defineField({
+      name: "order",
+      title: "Display Order",
+      type: "number",
+      description: "Order in which amenities appear",
+      initialValue: 0,
     }),
   ],
-  preview: { select: { title: "title", subtitle: "category" } },
+  preview: {
+    select: {
+      title: "label",
+      subtitle: "value",
+    },
+  },
+  orderings: [
+    {
+      title: "Display Order",
+      name: "orderAsc",
+      by: [{ field: "order", direction: "asc" }],
+    },
+  ],
 });

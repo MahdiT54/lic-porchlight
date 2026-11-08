@@ -1,67 +1,65 @@
-import { UserRound } from "lucide-react";
-import { defineArrayMember, defineField, defineType } from "sanity";
+import { defineField, defineType } from "sanity";
 
 export const user = defineType({
   name: "user",
+  title: "User",
   type: "document",
-  title: "User preferences (private dataset only)",
-  icon: UserRound,
   fields: [
     defineField({
       name: "clerkId",
+      title: "Clerk ID",
       type: "string",
-      title: "Clerk user ID",
-      description:
-        "Written by authenticated server code; identity, email, and credentials remain in Clerk.",
+      validation: (Rule) => Rule.required(),
       readOnly: true,
-      validation: (r) => r.required().regex(/^user_\S+$/),
     }),
     defineField({
-      name: "savedProperties",
+      name: "name",
+      title: "Name",
+      type: "string",
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: "email",
+      title: "Email",
+      type: "string",
+      validation: (Rule) => Rule.required().email(),
+    }),
+    defineField({
+      name: "phone",
+      title: "Phone",
+      type: "string",
+    }),
+    defineField({
+      name: "photo",
+      title: "Photo",
+      type: "image",
+      options: {
+        hotspot: true,
+      },
+    }),
+    defineField({
+      name: "savedListings",
+      title: "Saved Listings",
       type: "array",
       of: [
-        defineArrayMember({
+        {
           type: "reference",
           to: [{ type: "property" }],
-          weak: true,
-        }),
+        },
       ],
-      validation: (r) => r.unique(),
     }),
     defineField({
-      name: "preferredCities",
-      type: "array",
-      of: [defineArrayMember({ type: "string" })],
-      validation: (r) => r.unique().max(20),
-    }),
-    defineField({
-      name: "minimumBudget",
-      type: "number",
-      validation: (r) => r.min(0).integer(),
-    }),
-    defineField({
-      name: "maximumBudget",
-      type: "number",
-      validation: (r) =>
-        r
-          .min(0)
-          .integer()
-          .custom((value, context) => {
-            const minimum = context.document?.minimumBudget;
-            return (
-              value === undefined ||
-              typeof minimum !== "number" ||
-              value >= minimum ||
-              "Maximum budget must be at least the minimum budget."
-            );
-          }),
+      name: "createdAt",
+      title: "Created At",
+      type: "datetime",
+      initialValue: () => new Date().toISOString(),
     }),
   ],
   preview: {
-    select: { title: "clerkId" },
-    prepare: ({ title }) => ({
-      title: title || "Unlinked user preferences",
-      subtitle: "Private application data",
-    }),
+    select: {
+      title: "name",
+      subtitle: "email",
+      media: "photo",
+    },
   },
 });
