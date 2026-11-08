@@ -25,7 +25,7 @@ async function ensureOnboardingComplete(userId: string) {
     params: { clerkId: userId },
   });
 
-  if (user) {
+  if (user) { //we check metadata because that cookie is gonna be with the user for that time
     // User exists - sync Clerk metadata if needed
     if (!clerkUser.publicMetadata?.onboardingComplete) {
       await clerk.users.updateUser(userId, {

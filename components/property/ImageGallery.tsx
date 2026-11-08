@@ -6,14 +6,18 @@ import { useCallback, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { urlFor } from "@/sanity/lib/image";
-import type { SanityImage } from "@/types";
+import type { PROPERTY_DETAIL_QUERY_RESULT } from "@/sanity.types";
 
 interface ImageGalleryProps {
-  images: SanityImage[];
+  images: NonNullable<NonNullable<PROPERTY_DETAIL_QUERY_RESULT>["images"]>;
   title: string;
 }
 
-export function ImageGallery({ images, title }: ImageGalleryProps) {
+export function ImageGallery({
+  images: sourceImages,
+  title,
+}: ImageGalleryProps) {
+  const images = sourceImages.filter((image) => image.asset?.url);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
 
@@ -165,7 +169,8 @@ export function ImageGallery({ images, title }: ImageGalleryProps) {
       <Dialog open={lightboxOpen} onOpenChange={setLightboxOpen}>
         <DialogContent className="max-w-6xl p-0 bg-black/95 border-none overscroll-contain">
           <DialogTitle className="sr-only">
-            Image gallery: {title} — image {selectedIndex + 1} of {images.length}
+            Image gallery: {title} — image {selectedIndex + 1} of{" "}
+            {images.length}
           </DialogTitle>
           <section
             className="relative aspect-[16/9]"

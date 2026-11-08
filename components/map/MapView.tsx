@@ -4,11 +4,20 @@ import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import MapGL, { Marker, NavigationControl, Popup } from "react-map-gl/mapbox";
 import "mapbox-gl/dist/mapbox-gl.css";
-import type { Property } from "@/types";
+interface MapProperty {
+  _id: string;
+  title: string | null;
+  price: number | null;
+  bedrooms: number | null;
+  bathrooms: number | null;
+  squareFeet: number | null;
+  location?: { lat?: number; lng?: number } | null;
+  address?: { city?: string; state?: string } | null;
+}
 
 interface MapViewProps {
-  properties: Property[];
-  onPropertyClick?: (property: Property) => void;
+  properties: MapProperty[];
+  onPropertyClick?: (property: MapProperty) => void;
   className?: string;
 }
 
@@ -17,7 +26,7 @@ export function MapView({
   onPropertyClick,
   className,
 }: MapViewProps) {
-  const [selectedProperty, setSelectedProperty] = useState<Property | null>(
+  const [selectedProperty, setSelectedProperty] = useState<MapProperty | null>(
     null,
   );
   const [viewState, setViewState] = useState({
@@ -30,7 +39,11 @@ export function MapView({
 
   // Calculate bounds from properties if they exist
   const validProperties = properties.filter(
-    (p) => p.location?.lat && p.location?.lng,
+    (p) =>
+      typeof p.location?.lat === "number" &&
+      typeof p.location?.lng === "number" &&
+      Number.isFinite(p.location.lat) &&
+      Number.isFinite(p.location.lng),
   );
 
   // Center on first property when properties load (only once)
@@ -40,8 +53,8 @@ export function MapView({
       const firstProperty = validProperties[0];
       if (firstProperty.location) {
         setViewState({
-          longitude: firstProperty.location.lng,
-          latitude: firstProperty.location.lat,
+          longitude: firstProperty.location.lng ?? 0,
+          latitude: firstProperty.location.lat ?? 0,
           zoom: 10,
         });
         hasCenteredRef.current = true;
@@ -50,7 +63,7 @@ export function MapView({
   }, [validProperties]);
 
   const handleMarkerClick = useCallback(
-    (property: Property) => {
+    (property: MapProperty) => {
       setSelectedProperty(property);
       if (onPropertyClick) {
         onPropertyClick(property);
@@ -59,7 +72,8 @@ export function MapView({
     [onPropertyClick],
   );
 
-  const formatPrice = (price: number) => {
+  const formatPrice = (price: number | null) => {
+    if (price === null) return "Price unavailable";
     return new Intl.NumberFormat("en-US", {
       style: "currency",
       currency: "USD",
@@ -99,8 +113,8 @@ export function MapView({
 
         {selectedProperty?.location && (
           <Popup
-            longitude={selectedProperty.location.lng}
-            latitude={selectedProperty.location.lat}
+            longitude={selectedProperty.location.lng ?? 0}
+            latitude={selectedProperty.location.lat ?? 0}
             anchor="bottom"
             onClose={() => setSelectedProperty(null)}
             closeButton={true}

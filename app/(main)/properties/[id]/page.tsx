@@ -11,6 +11,7 @@ import {
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { stegaClean } from "next-sanity";
 import { DynamicMapView } from "@/components/map/DynamicMapView";
 import { AgentCard } from "@/components/property/AgentCard";
 import { ContactAgentButton } from "@/components/property/ContactAgentButton";
@@ -32,17 +33,21 @@ export async function generateMetadata({
   const { data: property } = await sanityFetch({
     query: PROPERTY_DETAIL_QUERY,
     params: { id },
+    stega: false,
   });
 
   if (!property) {
     return { title: "Property Not Found" };
   }
 
-  const price = new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    maximumFractionDigits: 0,
-  }).format(property.price);
+  const price =
+    property.price === null
+      ? "Price unavailable"
+      : new Intl.NumberFormat("en-US", {
+          style: "currency",
+          currency: "USD",
+          maximumFractionDigits: 0,
+        }).format(property.price);
 
   return {
     title: `${property.title} - ${price}`,
@@ -60,16 +65,18 @@ export default async function PropertyPage({
   const { id } = await params;
   const { userId } = await auth();
 
-  const { data: property } = await sanityFetch({
+  const { data } = await sanityFetch({
     query: PROPERTY_DETAIL_QUERY,
     params: { id },
   });
+  const property = stegaClean(data);
 
   if (!property) {
     notFound();
   }
 
-  const formatPrice = (price: number) => {
+  const formatPrice = (price: number | null) => {
+    if (price === null) return "Price unavailable";
     return new Intl.NumberFormat("en-US", {
       style: "currency",
       currency: "USD",
@@ -78,7 +85,7 @@ export default async function PropertyPage({
   };
 
   const statusLabel =
-    property.status !== "active"
+    property.status && property.status !== "active"
       ? property.status.charAt(0).toUpperCase() + property.status.slice(1)
       : null;
 
@@ -116,7 +123,7 @@ export default async function PropertyPage({
             {/* Image Gallery */}
             <ImageGallery
               images={property.images || []}
-              title={property.title}
+              title={property.title ?? "Property"}
             />
 
             {/* Property Header */}
@@ -130,7 +137,9 @@ export default async function PropertyPage({
                     {statusLabel && (
                       <Badge
                         variant={
-                          property.status === "sold" ? "destructive" : "muted"
+                          property.status === "sold"
+                            ? "destructive"
+                            : "secondary"
                         }
                       >
                         {statusLabel}
@@ -144,7 +153,7 @@ export default async function PropertyPage({
                 <div className="flex gap-2">
                   {userId && <SavePropertyButton propertyId={property._id} />}
                   <SharePropertyButton
-                    title={property.title}
+                    title={property.title ?? "Property"}
                     price={formatPrice(property.price)}
                   />
                 </div>
@@ -258,14 +267,7 @@ export default async function PropertyPage({
                 </CardHeader>
                 <CardContent className="p-0">
                   <div className="h-[400px]">
-                    <DynamicMapView
-                      properties={[
-                        {
-                          ...property,
-                          slug: property.slug?.current || id,
-                        },
-                      ]}
-                    />
+                    <DynamicMapView properties={[property]} />
                   </div>
                 </CardContent>
               </Card>

@@ -2,8 +2,9 @@
 
 import { auth, clerkClient, currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
-import { client } from "@/lib/sanity/client";
-import { sanityFetch } from "@/lib/sanity/live";
+import { client } from "@/sanity/lib/client";
+import { sanityFetch } from "@/sanity/lib/live";
+
 import {
   AGENT_BY_USER_ID_QUERY,
   USER_EXISTS_QUERY,

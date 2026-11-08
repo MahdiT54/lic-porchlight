@@ -5,10 +5,10 @@ import type { ReactNode } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
 import { urlFor } from "@/sanity/lib/image";
-import type { Agent } from "@/types";
+import type { PROPERTY_DETAIL_QUERY_RESULT } from "@/sanity.types";
 
 interface AgentCardProps {
-  agent: Agent;
+  agent: NonNullable<NonNullable<PROPERTY_DETAIL_QUERY_RESULT>["agent"]>;
   children?: ReactNode;
 }
 
@@ -30,15 +30,15 @@ export function AgentCard({ agent, children }: AgentCardProps) {
             {agent.photo?.asset ? (
               <AvatarImage
                 src={urlFor(agent.photo).width(128).height(128).url()}
-                alt={agent.name}
+                alt={agent.name ?? "Agent"}
               />
             ) : null}
             <AvatarFallback className="text-lg">
-              {getInitials(agent.name)}
+              {getInitials(agent.name ?? "Agent")}
             </AvatarFallback>
           </Avatar>
           <div>
-            <h3 className="font-semibold text-lg">{agent.name}</h3>
+            <h3 className="font-semibold text-lg">{agent.name ?? "Agent"}</h3>
             {agent.agency && (
               <div className="flex items-center gap-1 text-sm text-muted-foreground">
                 <Building className="h-4 w-4" />
