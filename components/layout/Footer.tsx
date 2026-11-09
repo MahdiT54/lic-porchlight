@@ -1,11 +1,13 @@
 "use client";
 
-import { Home, Mail } from "lucide-react";
+import { Mail } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import porchlightLogo from "@/public/lic-porchlight-logo.png";
 
 export function Footer() {
     const [email, setEmail] = useState("");
@@ -31,17 +33,14 @@ export function Footer() {
                     <div className="lg:col-span-2">
                         <Link
                             href="/"
-                            className="flex items-center gap-2.5 mb-4 w-fit transition-opacity duration-200 hover:opacity-80"
+                            className="flex items-center mb-4 w-fit transition-opacity duration-200 hover:opacity-80"
                         >
-                            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary">
-                                <Home
-                                    className="h-5 w-5 text-primary-foreground"
-                                    aria-hidden="true"
-                                />
-                            </div>
-                            <span className="text-xl font-bold font-heading tracking-tight">
-                                Porchlight
-                            </span>
+                            <Image
+                                src={porchlightLogo}
+                                alt="LIC Porchlight"
+                                sizes="224px"
+                                className="h-auto w-56 max-w-full"
+                            />
                         </Link>
                         <p className="text-muted-foreground max-w-sm mb-6">
                             Making your first home journey simple and stress-free. Find your

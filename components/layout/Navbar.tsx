@@ -6,7 +6,8 @@ import {
     SignUpButton,
     UserButton,
 } from "@clerk/nextjs";
-import { Heart, Home, LayoutDashboard, Menu, User, X } from "lucide-react";
+import { Heart, LayoutDashboard, Menu, User, X } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
@@ -18,6 +19,7 @@ import {
     SheetTitle,
     SheetTrigger,
 } from "@/components/ui/sheet";
+import porchlightLogo from "@/public/lic-porchlight-logo.png";
 
 export function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
@@ -39,17 +41,15 @@ export function Navbar() {
                 <div className="flex items-center gap-8">
                     <Link
                         href="/"
-                        className="flex items-center gap-2.5 transition-opacity duration-200 hover:opacity-80"
+                        className="flex shrink-0 items-center transition-opacity duration-200 hover:opacity-80"
                     >
-                        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary">
-                            <Home
-                                className="h-5 w-5 text-primary-foreground"
-                                aria-hidden="true"
-                            />
-                        </div>
-                        <span className="text-xl font-bold font-heading tracking-tight">
-                            Porchlight
-                        </span>
+                        <Image
+                            src={porchlightLogo}
+                            alt="LIC Porchlight"
+                            sizes="(min-width: 1024px) 224px, (min-width: 640px) 192px, 176px"
+                            className="h-auto w-44 sm:w-48 lg:w-56"
+                            loading="eager"
+                        />
                     </Link>
 
                     <nav
@@ -172,14 +172,13 @@ export function Navbar() {
                             className="w-[300px] sm:w-[350px] overscroll-contain"
                         >
                             <SheetHeader>
-                                <SheetTitle className="flex items-center gap-2">
-                                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
-                                        <Home
-                                            className="h-4 w-4 text-primary-foreground"
-                                            aria-hidden="true"
-                                        />
-                                    </div>
-                                    <span className="font-heading">Porchlight</span>
+                                <SheetTitle>
+                                    <Image
+                                        src={porchlightLogo}
+                                        alt="LIC Porchlight"
+                                        sizes="192px"
+                                        className="h-auto w-48"
+                                    />
                                 </SheetTitle>
                             </SheetHeader>
                             <nav
