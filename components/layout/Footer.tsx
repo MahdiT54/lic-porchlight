@@ -40,7 +40,7 @@ export function Footer() {
                                 />
                             </div>
                             <span className="text-xl font-bold font-heading tracking-tight">
-                                Nestwell
+                                Porchlight
                             </span>
                         </Link>
                         <p className="text-muted-foreground max-w-sm mb-6">
@@ -212,7 +212,7 @@ export function Footer() {
                 {/* Bottom Bar */}
                 <div className="border-t border-border/50 mt-12 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
                     <p suppressHydrationWarning>
-                        © {new Date().getFullYear()} Nestwell. All rights reserved.
+                        © {new Date().getFullYear()} Porchlight. All rights reserved.
                     </p>
                     <div className="flex items-center gap-6">
                         <Link

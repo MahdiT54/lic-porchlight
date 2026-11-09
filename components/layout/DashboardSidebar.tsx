@@ -67,7 +67,7 @@ export function DashboardSidebar() {
             className="h-4 w-4 transition-transform group-hover:-translate-x-1"
             aria-hidden="true"
           />
-          <span className="text-sm font-medium">Back to Nestwell</span>
+          <span className="text-sm font-medium">Back to Porchlight</span>
         </Link>
 
         {/* Dashboard Header */}

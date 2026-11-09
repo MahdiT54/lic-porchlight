@@ -48,7 +48,7 @@ export function Navbar() {
                             />
                         </div>
                         <span className="text-xl font-bold font-heading tracking-tight">
-                            Nestwell
+                            Porchlight
                         </span>
                     </Link>
 
@@ -179,7 +179,7 @@ export function Navbar() {
                                             aria-hidden="true"
                                         />
                                     </div>
-                                    <span className="font-heading">Nestwell</span>
+                                    <span className="font-heading">Porchlight</span>
                                 </SheetTitle>
                             </SheetHeader>
                             <nav
