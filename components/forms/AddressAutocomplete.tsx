@@ -1,5 +1,8 @@
 "use client";
 
+import mapboxGeocoding, {
+  type GeocodeFeature as MapboxFeature,
+} from "@mapbox/mapbox-sdk/services/geocoding";
 import debounce from "lodash.debounce"; // debounce function to limit API calls when typing (buffers user input)
 import { CheckCircle2, Loader2, MapPin, X } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -14,22 +17,6 @@ export interface AddressResult {
   lat: number;
   lng: number;
   formattedAddress: string;
-}
-
-interface MapboxFeature {
-  id: string;
-  place_name: string;
-  center: [number, number]; // [lng, lat]
-  context?: Array<{
-    id: string;
-    text: string;
-    short_code?: string;
-  }>;
-  properties?: {
-    address?: string;
-  };
-  address?: string;
-  text?: string;
 }
 
 interface AddressAutocompleteProps {
@@ -58,6 +45,10 @@ export function AddressAutocomplete({
 
   const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const geocodingClient = useMemo(() => {
+    const accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
+    return accessToken ? mapboxGeocoding({ accessToken }) : null;
+  }, []);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -75,32 +66,37 @@ export function AddressAutocomplete({
   }, []);
 
   // Fetch suggestions from Mapbox
-  const fetchSuggestions = useCallback(async (query: string) => {
-    const token = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
-    if (!token || query.length < 3) {
-      setSuggestions([]);
-      return;
-    }
+  const fetchSuggestions = useCallback(
+    async (query: string) => {
+      if (!geocodingClient || query.length < 3) {
+        setSuggestions([]);
+        return;
+      }
 
-    setIsLoading(true);
-    try {
-      const encodedQuery = encodeURIComponent(query);
-      // Focus on addresses with country filter for US
-      const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodedQuery}.json?access_token=${token}&types=address&limit=5&country=US`;
+      setIsLoading(true);
+      try {
+        const response = await geocodingClient
+          .forwardGeocode({
+            query,
+            types: ["address"],
+            limit: 5,
+            countries: ["us"],
+          })
+          .send();
 
-      const response = await fetch(url);
-      if (!response.ok) throw new Error("Failed to fetch suggestions");
-
-      const data = await response.json();
-      setSuggestions(data.features || []);
-      setIsOpen(data.features?.length > 0);
-    } catch (error) {
-      console.error("Autocomplete error:", error);
-      setSuggestions([]);
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
+        const data = response.body;
+        setSuggestions(data.features || []);
+        setIsOpen(data.features?.length > 0);
+      } catch (error) {
+        console.error("Autocomplete error:", error);
+        setSuggestions([]);
+        setIsOpen(false);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [geocodingClient],
+  );
 
   // Debounced search
   const debouncedSearch = useMemo(

@@ -6,8 +6,7 @@ import { SanityLive } from "@/sanity/lib/live";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 
-const geist = Geist({subsets:['latin'],variable:'--font-sans'});
-
+const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
 
 // Body font - highly readable
 const inter = Inter({
@@ -38,7 +37,8 @@ export const metadata: Metadata = {
   },
   description:
     "Making your first home journey simple and stress-free. Browse properties, save favorites, and connect with trusted agents.",
-  keywords: [ // SEO by LIC's finest
+  keywords: [
+    // SEO by LIC's finest
     "real estate",
     "homes for sale",
     "first-time homebuyer",
@@ -88,7 +88,11 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <html lang="en" suppressHydrationWarning className={cn("font-sans", geist.variable)}>
+      <html
+        lang="en"
+        suppressHydrationWarning
+        className={cn("font-sans", geist.variable)}
+      >
         <head>
           {/* Preconnect to external domains for performance */}
           <link rel="preconnect" href="https://cdn.sanity.io" />

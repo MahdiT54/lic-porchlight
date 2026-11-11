@@ -88,72 +88,81 @@ export default async function ListingsPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {listings.map((listing) => ( // remove type assertion as listing infers the type
-                <TableRow key={listing._id}>
-                  <TableCell>
-                    <div className="flex items-center gap-3">
-                      {listing.image?.asset ? (
-                        <Image
-                          src={urlFor(listing.image).width(80).height(60).url()}
-                          alt={listing.title}
-                          width={80}
-                          height={60}
-                          className="rounded object-cover"
-                        />
-                      ) : (
-                        <div className="w-20 h-15 bg-muted rounded flex items-center justify-center text-xs text-muted-foreground">
-                          No image
-                        </div>
-                      )}
-                      <div>
-                        <Link
-                          href={`/properties/${listing._id}`}
-                          className="font-medium hover:underline"
-                        >
-                          {listing.title}
-                        </Link>
-                      </div>
-                    </div>
-                  </TableCell>
-                  <TableCell className="font-semibold">
-                    {formatPrice(listing.price)}
-                  </TableCell>
-                  <TableCell>
-                    <ListingStatusSelect
-                      listingId={listing._id}
-                      currentStatus={listing.status}
-                    />
-                  </TableCell>
-                  <TableCell className="text-muted-foreground">
-                    {listing.bedrooms} beds • {listing.bathrooms} baths
-                  </TableCell>
-                  <TableCell className="text-muted-foreground">
-                    {formatDate(listing.createdAt)}
-                  </TableCell>
-                  <TableCell>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon">
-                          <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem asChild>
-                          <Link href={`/dashboard/listings/${listing._id}`}>
-                            <Pencil className="h-4 w-4 mr-2" />
-                            Edit
+              {listings.map(
+                (
+                  listing, // remove type assertion as listing infers the type
+                ) => (
+                  <TableRow key={listing._id}>
+                    <TableCell>
+                      <div className="flex items-center gap-3">
+                        {listing.image?.asset ? (
+                          <Image
+                            src={urlFor(listing.image)
+                              .width(80)
+                              .height(60)
+                              .url()}
+                            alt={listing.title}
+                            width={80}
+                            height={60}
+                            className="rounded object-cover"
+                          />
+                        ) : (
+                          <div className="w-20 h-15 bg-muted rounded flex items-center justify-center text-xs text-muted-foreground">
+                            No image
+                          </div>
+                        )}
+                        <div>
+                          <Link
+                            href={`/properties/${listing._id}`}
+                            className="font-medium hover:underline"
+                          >
+                            {listing.title}
                           </Link>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem asChild>
-                          <Link href={`/properties/${listing._id}`}>View</Link>
-                        </DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DeleteListingButton listingId={listing._id} />
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </TableCell>
-                </TableRow>
-              ))}
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell className="font-semibold">
+                      {formatPrice(listing.price)}
+                    </TableCell>
+                    <TableCell>
+                      <ListingStatusSelect
+                        listingId={listing._id}
+                        currentStatus={listing.status}
+                      />
+                    </TableCell>
+                    <TableCell className="text-muted-foreground">
+                      {listing.bedrooms} beds • {listing.bathrooms} baths
+                    </TableCell>
+                    <TableCell className="text-muted-foreground">
+                      {formatDate(listing.createdAt)}
+                    </TableCell>
+                    <TableCell>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="icon">
+                            <MoreHorizontal className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem asChild>
+                            <Link href={`/dashboard/listings/${listing._id}`}>
+                              <Pencil className="h-4 w-4 mr-2" />
+                              Edit
+                            </Link>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem asChild>
+                            <Link href={`/properties/${listing._id}`}>
+                              View
+                            </Link>
+                          </DropdownMenuItem>
+                          <DropdownMenuSeparator />
+                          <DeleteListingButton listingId={listing._id} />
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
+                  </TableRow>
+                ),
+              )}
             </TableBody>
           </Table>
         </div>

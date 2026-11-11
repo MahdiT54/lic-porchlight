@@ -558,7 +558,7 @@ export function ListingForm({
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="relative z-10 overflow-visible">
           <CardHeader>
             <CardTitle>Property Address</CardTitle>
           </CardHeader>

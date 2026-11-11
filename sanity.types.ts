@@ -771,7 +771,8 @@ declare global {
     '\n  *[_type == "property" && _id == $id][0] {\n    _id,\n    title,\n    description,\n    price,\n    propertyType,\n    status,\n    bedrooms,\n    bathrooms,\n    squareFeet,\n    yearBuilt,\n    address,\n    location,\n    images[] { \n  asset->{\n    _id,\n    url,\n    metadata { lqip, dimensions }\n  },\n  _key,\n  alt\n },\n    amenities,\n    agent\n  }\n': LISTING_BY_ID_QUERY_RESULT;
     '\n  *[_type == "user" && clerkId == $clerkId][0] {\n    savedListings[]-> {\n      \n  _id,\n  title,\n  "slug": slug.current,\n  price,\n  propertyType,\n  status,\n  bedrooms,\n  bathrooms,\n  squareFeet,\n  address,\n  "image": images[0] { \n  asset->{\n    _id,\n    url,\n    metadata { lqip, dimensions }\n  },\n  _key,\n  alt\n }\n\n    }\n  }.savedListings\n': USER_SAVED_LISTINGS_QUERY_RESULT;
     '\n  *[_type == "agent" && userId == $userId][0]{ _id, name, onboardingComplete }\n':
-      ANALYTICS_AGENT_QUERY_RESULT | AGENT_DASHBOARD_QUERY_RESULT;
+      | ANALYTICS_AGENT_QUERY_RESULT
+      | AGENT_DASHBOARD_QUERY_RESULT;
     '\n  count(*[_type == "property" && agent._ref == $agentId])\n':
       | ANALYTICS_LISTINGS_TOTAL_QUERY_RESULT
       | DASHBOARD_LISTINGS_COUNT_QUERY_RESULT;
@@ -779,9 +780,11 @@ declare global {
     '\n  count(*[_type == "property" && agent._ref == $agentId && status == "pending"])\n': ANALYTICS_LISTINGS_PENDING_QUERY_RESULT;
     '\n  count(*[_type == "property" && agent._ref == $agentId && status == "sold"])\n': ANALYTICS_LISTINGS_SOLD_QUERY_RESULT;
     '\n  count(*[_type == "lead" && agent._ref == $agentId])\n':
-      ANALYTICS_LEADS_TOTAL_QUERY_RESULT | DASHBOARD_LEADS_COUNT_QUERY_RESULT;
+      | ANALYTICS_LEADS_TOTAL_QUERY_RESULT
+      | DASHBOARD_LEADS_COUNT_QUERY_RESULT;
     '\n  count(*[_type == "lead" && agent._ref == $agentId && status == "new"])\n':
-      ANALYTICS_LEADS_NEW_QUERY_RESULT | DASHBOARD_NEW_LEADS_COUNT_QUERY_RESULT;
+      | ANALYTICS_LEADS_NEW_QUERY_RESULT
+      | DASHBOARD_NEW_LEADS_COUNT_QUERY_RESULT;
     '\n  count(*[_type == "lead" && agent._ref == $agentId && status == "contacted"])\n': ANALYTICS_LEADS_CONTACTED_QUERY_RESULT;
     '\n  count(*[_type == "lead" && agent._ref == $agentId && status == "closed"])\n': ANALYTICS_LEADS_CLOSED_QUERY_RESULT;
     '\n  *[_type == "property" && agent._ref == $agentId]{\n    "title": title,\n    "leadCount": count(*[_type == "lead" && property._ref == ^._id])\n  } | order(leadCount desc)[0...10]\n': ANALYTICS_LEADS_BY_PROPERTY_QUERY_RESULT;
