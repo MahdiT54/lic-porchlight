@@ -1,40 +1,147 @@
-// i made a type library to access to a bunch of types throughout the app centralized in one place
+// Amenity type
+export interface Amenity {
+  _id: string;
+  value: string;
+  label: string;
+  icon?: string | null;
+  order?: number;
+}
 
-import type { StegaBranded } from "next-sanity";
-import type { USER_SAVED_LISTINGS_QUERY_RESULT } from "@/sanity.types";
+// Property types
+export interface Address {
+  street: string;
+  city: string;
+  state: string;
+  zipCode: string;
+}
 
-// Shared card projection, with support for Visual Editing's encoded strings.
-type PropertyCardResult = NonNullable<USER_SAVED_LISTINGS_QUERY_RESULT>[number];
-export type PropertyCardData =
-  | PropertyCardResult
-  | StegaBranded<PropertyCardResult>;
+export interface GeoPoint {
+  lat: number;
+  lng: number;
+}
 
-// Read contracts come from query projections, never handwritten document shapes.
-export type User = NonNullable<
-  import("@/sanity.types").USER_PROFILE_QUERY_RESULT
->;
-export type Agent = NonNullable<
-  import("@/sanity.types").AGENT_PROFILE_QUERY_RESULT
->;
-export type Property = NonNullable<
-  import("@/sanity.types").PROPERTY_DETAIL_QUERY_RESULT
->;
-export type Lead = import("@/sanity.types").AGENT_LEADS_QUERY_RESULT[number];
-export type Amenity = import("@/sanity.types").AMENITIES_QUERY_RESULT[number];
-export type Address = import("@/sanity.types").Property["address"];
-export type GeoPoint = { lat: number; lng: number };
-export type SanityImage = NonNullable<Property["images"]>[number];
+export interface SanityImage {
+  asset: {
+    _id: string;
+    url: string;
+    metadata?: {
+      lqip?: string;
+      dimensions?: {
+        width: number;
+        height: number;
+      };
+    };
+  };
+  alt?: string;
+}
 
-// Mutation input contracts are inferred from the boundary validators.
-export type UserProfileData = import("zod").infer<
-  typeof import("@/lib/sanity/validation").profileSchema
->;
-export type UserOnboardingData = UserProfileData & { email: string };
-export type AgentProfileData = import("zod").infer<
-  typeof import("@/lib/sanity/validation").agentProfileSchema
->;
-export type AgentOnboardingData = AgentProfileData;
-export type ListingFormData = import("@/lib/sanity/validation").ListingInput;
+export interface Property {
+  _id: string;
+  title: string;
+  slug: string;
+  description?: string;
+  price: number;
+  propertyType: "house" | "apartment" | "condo" | "townhouse" | "land";
+  status: "active" | "pending" | "sold";
+  bedrooms: number;
+  bathrooms: number;
+  squareFeet: number;
+  yearBuilt?: number;
+  address: Address;
+  location?: GeoPoint;
+  images?: SanityImage[];
+  image?: SanityImage;
+  amenities?: string[];
+  featured?: boolean;
+  createdAt: string;
+  updatedAt?: string;
+  agent?: Agent;
+}
+
+export interface Agent {
+  _id: string;
+  userId: string;
+  name: string;
+  email: string;
+  phone?: string;
+  photo?: SanityImage;
+  bio?: string;
+  licenseNumber?: string;
+  agency?: string;
+  onboardingComplete?: boolean;
+  createdAt?: string;
+}
+
+export interface Lead {
+  _id: string;
+  property: {
+    _id: string;
+    title: string;
+    slug: string;
+  };
+  buyerName: string;
+  buyerEmail: string;
+  buyerPhone?: string;
+  status: "new" | "contacted" | "closed";
+  createdAt: string;
+}
+
+export interface User {
+  _id: string;
+  clerkId: string;
+  name: string;
+  email: string;
+  phone?: string;
+  photo?: SanityImage;
+  savedListings?: Property[];
+  createdAt: string;
+}
+
+// Form data types
+export interface UserOnboardingData {
+  name: string;
+  phone: string;
+  email: string;
+  photo?: SanityImage;
+}
+
+export interface AgentOnboardingData {
+  bio: string;
+  photo?: SanityImage;
+  licenseNumber: string;
+  agency?: string;
+  phone: string;
+}
+
+export interface UserProfileData {
+  name: string;
+  phone: string;
+  photo?: SanityImage;
+}
+
+export interface AgentProfileData {
+  bio: string;
+  photo?: SanityImage;
+  licenseNumber: string;
+  agency?: string;
+  phone: string;
+}
+
+export interface ListingFormData {
+  title: string;
+  description: string;
+  price: number;
+  propertyType: "house" | "apartment" | "condo" | "townhouse" | "land";
+  status?: "active" | "pending" | "sold";
+  bedrooms: number;
+  bathrooms: number;
+  squareFeet: number;
+  yearBuilt?: number;
+  address: Address;
+  location?: GeoPoint;
+  images?: SanityImage[];
+  amenities?: string[];
+}
 
 // Search params
 export interface PropertySearchParams {
