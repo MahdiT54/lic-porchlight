@@ -1,6 +1,7 @@
 "use client";
 // this component essentially takes all values for a listing & then accepts & handles it
 import { zodResolver } from "@hookform/resolvers/zod";
+import { type StegaBranded, stegaClean } from "next-sanity";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -46,8 +47,13 @@ const STATUS_OPTIONS = [
   { value: "sold", label: "Sold" },
 ];
 
-// Re-export Amenity type from shared types
-import type { Amenity } from "@/types";
+import type {
+  AMENITIES_QUERY_RESULT,
+  LISTING_BY_ID_QUERY_RESULT,
+} from "@/sanity.types";
+import type { GeoPoint } from "@/types";
+
+type Amenity = AMENITIES_QUERY_RESULT[number];
 export type { Amenity };
 
 const formSchema = z.object({
@@ -77,49 +83,18 @@ type FormDataInput = z.input<typeof formSchema>;
 // Output type: what validation produces (coerced to proper types)
 type FormDataOutput = z.output<typeof formSchema>;
 
-interface ListingImage {
-  asset: {
-    _id: string;
-    url: string;
-  };
-}
-
-interface GeoPoint {
-  lat: number;
-  lng: number;
-}
-
 interface ListingFormProps {
-  listing?: {
-    _id: string;
-    title: string;
-    description?: string;
-    price: number;
-    propertyType: string;
-    status: string;
-    bedrooms: number;
-    bathrooms: number;
-    squareFeet: number;
-    yearBuilt?: number;
-    address?: {
-      street?: string;
-      city?: string;
-      state?: string;
-      zipCode?: string;
-    };
-    location?: GeoPoint;
-    amenities?: string[];
-    images?: ListingImage[];
-  };
+  listing?: StegaBranded<NonNullable<LISTING_BY_ID_QUERY_RESULT>>;
   amenities: Amenity[];
   mode?: "create" | "edit";
 }
 
 export function ListingForm({
-  listing,
+  listing: rawListing,
   amenities,
   mode = "create",
 }: ListingFormProps) {
+  const listing = stegaClean(rawListing);
   const [isPending, startTransition] = useTransition();
 
   // Initialize images from listing data
@@ -132,7 +107,9 @@ export function ListingForm({
 
   const [images, setImages] = useState<ImageItem[]>(initialImages);
   const [location, setLocation] = useState<GeoPoint | undefined>(
-    listing?.location,
+    listing?.location?.lat != null && listing.location.lng != null
+      ? { lat: listing.location.lat, lng: listing.location.lng }
+      : undefined,
   );
 
   // Build initial address display value for edit mode
@@ -156,13 +133,12 @@ export function ListingForm({
       title: listing?.title || "",
       description: listing?.description || "",
       price: listing?.price || 0,
-      propertyType:
-        (listing?.propertyType as FormDataOutput["propertyType"]) || "house",
-      status: (listing?.status as FormDataOutput["status"]) || "active",
+      propertyType: listing?.propertyType || "house",
+      status: listing?.status || "active",
       bedrooms: listing?.bedrooms || 0,
       bathrooms: listing?.bathrooms || 0,
       squareFeet: listing?.squareFeet || 0,
-      yearBuilt: listing?.yearBuilt,
+      yearBuilt: listing?.yearBuilt ?? undefined,
       street: listing?.address?.street || "",
       city: listing?.address?.city || "",
       state: listing?.address?.state || "",

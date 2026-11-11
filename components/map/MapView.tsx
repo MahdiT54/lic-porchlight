@@ -5,6 +5,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import MapGL, { Marker, NavigationControl, Popup } from "react-map-gl/mapbox";
 import "mapbox-gl/dist/mapbox-gl.css";
 import type { PROPERTY_DETAIL_QUERY_RESULT } from "@/sanity.types";
+import type { GeoPoint } from "@/types";
 
 type MapProperty = Pick<
   NonNullable<PROPERTY_DETAIL_QUERY_RESULT>,
@@ -17,7 +18,7 @@ type MapProperty = Pick<
   | "location"
   | "address"
 >;
-type LocatedProperty = MapProperty & { location: { lat: number; lng: number } };
+type LocatedProperty = MapProperty & { location: GeoPoint };
 
 interface MapViewProps {
   properties: MapProperty[];

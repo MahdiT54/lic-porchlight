@@ -3,14 +3,14 @@
 import { Bath, Bed, Heart, MapPin, Square } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { stegaClean } from "next-sanity";
+import { type StegaBranded, stegaClean } from "next-sanity";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { urlFor } from "@/sanity/lib/image";
-import type { PropertyCardData } from "@/types";
+import type { USER_SAVED_LISTINGS_QUERY_RESULT } from "@/sanity.types";
 
 interface PropertyCardProps {
-  property: PropertyCardData;
+  property: StegaBranded<NonNullable<USER_SAVED_LISTINGS_QUERY_RESULT>[number]>;
   onSave?: (propertyId: string) => void;
   isSaved?: boolean;
   showRemoveButton?: boolean;

@@ -1,5 +1,6 @@
 "use client";
 
+import { type StegaBranded, stegaClean } from "next-sanity";
 import { useTransition } from "react";
 import { toast } from "sonner";
 import { updateLeadStatus } from "@/actions/leads";
@@ -11,10 +12,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { leadStatusSchema } from "@/lib/sanity/validation";
+import type { Lead } from "@/sanity.types";
 
 interface LeadStatusSelectProps {
   leadId: string;
-  currentStatus: string;
+  currentStatus: Lead["status"] | StegaBranded<Lead["status"]>;
 }
 
 const statusColors = {
@@ -25,14 +28,18 @@ const statusColors = {
 
 export function LeadStatusSelect({
   leadId,
-  currentStatus,
+  currentStatus: rawStatus,
 }: LeadStatusSelectProps) {
+  const currentStatus = stegaClean(rawStatus);
   const [isPending, startTransition] = useTransition();
 
-  const handleStatusChange = (newStatus: "new" | "contacted" | "closed") => {
+  const handleStatusChange = (value: string | null) => {
+    const result = leadStatusSchema.safeParse(value);
+    if (!result.success) return;
+
     startTransition(async () => {
       try {
-        await updateLeadStatus(leadId, newStatus);
+        await updateLeadStatus(leadId, result.data);
         toast.success("Status updated");
       } catch (_error) {
         toast.error("Failed to update status");
@@ -48,10 +55,7 @@ export function LeadStatusSelect({
     >
       <SelectTrigger className="w-[120px]">
         <SelectValue>
-          <Badge
-            variant="outline"
-            className={statusColors[currentStatus as keyof typeof statusColors]}
-          >
+          <Badge variant="outline" className={statusColors[currentStatus]}>
             {currentStatus.charAt(0).toUpperCase() + currentStatus.slice(1)}
           </Badge>
         </SelectValue>

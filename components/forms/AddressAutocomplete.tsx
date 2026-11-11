@@ -8,16 +8,13 @@ import { CheckCircle2, Loader2, MapPin, X } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import type { Property } from "@/sanity.types";
+import type { GeoPoint } from "@/types";
 
-export interface AddressResult {
-  street: string;
-  city: string;
-  state: string;
-  zipCode: string;
-  lat: number;
-  lng: number;
-  formattedAddress: string;
-}
+export type AddressResult = Property["address"] &
+  GeoPoint & {
+    formattedAddress: string;
+  };
 
 interface AddressAutocompleteProps {
   value?: string;

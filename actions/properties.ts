@@ -14,6 +14,7 @@ import {
 } from "@/lib/sanity/validation";
 import { client } from "@/sanity/lib/client";
 import { sanityFetch } from "@/sanity/lib/live";
+import type { Property } from "@/sanity.types";
 
 function slugify(text: string): string {
   return text
@@ -128,7 +129,7 @@ export async function updateListing(listingId: string, data: ListingInput) {
 
 export async function updateListingStatus(
   listingId: string,
-  status: "active" | "pending" | "sold",
+  status: Property["status"],
 ) {
   listingId = documentIdSchema.parse(listingId);
   status = propertyStatusSchema.parse(status);

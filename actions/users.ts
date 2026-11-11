@@ -14,6 +14,7 @@ import {
 } from "@/lib/sanity/validation";
 import { client } from "@/sanity/lib/client";
 import { sanityFetch } from "@/sanity/lib/live";
+import type { USER_SAVED_IDS_QUERY_RESULT } from "@/sanity.types";
 import type { UserOnboardingData, UserProfileData } from "@/types";
 
 export async function completeUserOnboarding(data: UserOnboardingData) {
@@ -100,7 +101,7 @@ export async function updateUserProfile(data: UserProfileData) {
  */
 async function ensureOnboardingCompleteForSave(
   userId: string,
-): Promise<{ _id: string; savedIds: string[] } | null> {
+): Promise<USER_SAVED_IDS_QUERY_RESULT> {
   const clerk = await clerkClient();
   const clerkUser = await clerk.users.getUser(userId);
 
@@ -174,7 +175,7 @@ export async function toggleSavedListing(
     return { success: false, requiresOnboarding: true };
   }
 
-  const isSaved = user.savedIds.includes(propertyId);
+  const isSaved = user.savedIds.some((savedId) => savedId === propertyId);
 
   if (isSaved) {
     // Remove from saved

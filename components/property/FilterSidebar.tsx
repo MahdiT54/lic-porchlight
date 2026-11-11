@@ -1,9 +1,10 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import type { AMENITIES_QUERY_RESULT } from "@/sanity.types";
 
 interface FilterSidebarProps {
-  amenities: { _id: string; value: string | null; label: string | null }[];
+  amenities: AMENITIES_QUERY_RESULT;
   values?: Record<string, string | undefined>;
 }
 

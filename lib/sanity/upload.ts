@@ -1,14 +1,11 @@
 "use server";
 
 import { client } from "@/sanity/lib/client";
+import type { User } from "@/sanity.types";
 
-export interface UploadedImage {
-  _type: "image";
-  asset: {
-    _type: "reference";
-    _ref: string;
-  };
-}
+export type UploadedImage = Required<
+  Pick<NonNullable<User["photo"]>, "_type" | "asset">
+>;
 
 export async function uploadImageToSanity(
   formData: FormData,

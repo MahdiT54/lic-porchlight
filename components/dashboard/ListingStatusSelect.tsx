@@ -1,5 +1,6 @@
 "use client";
 
+import { type StegaBranded, stegaClean } from "next-sanity";
 import { useTransition } from "react";
 import { toast } from "sonner";
 import { updateListingStatus } from "@/actions/properties";
@@ -11,10 +12,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { propertyStatusSchema } from "@/lib/sanity/validation";
+import type { Property } from "@/sanity.types";
 
 interface ListingStatusSelectProps {
   listingId: string;
-  currentStatus: string;
+  currentStatus: Property["status"] | StegaBranded<Property["status"]>;
 }
 
 const statusColors = {
@@ -25,14 +28,18 @@ const statusColors = {
 
 export function ListingStatusSelect({
   listingId,
-  currentStatus,
+  currentStatus: rawStatus,
 }: ListingStatusSelectProps) {
+  const currentStatus = stegaClean(rawStatus);
   const [isPending, startTransition] = useTransition();
 
-  const handleStatusChange = (newStatus: "active" | "pending" | "sold") => {
+  const handleStatusChange = (value: string | null) => {
+    const result = propertyStatusSchema.safeParse(value);
+    if (!result.success) return;
+
     startTransition(async () => {
       try {
-        await updateListingStatus(listingId, newStatus);
+        await updateListingStatus(listingId, result.data);
         toast.success("Status updated");
       } catch {
         toast.error("Failed to update status");
@@ -48,10 +55,7 @@ export function ListingStatusSelect({
     >
       <SelectTrigger className="w-[120px]">
         <SelectValue>
-          <Badge
-            variant="outline"
-            className={statusColors[currentStatus as keyof typeof statusColors]}
-          >
+          <Badge variant="outline" className={statusColors[currentStatus]}>
             {currentStatus.charAt(0).toUpperCase() + currentStatus.slice(1)}
           </Badge>
         </SelectValue>

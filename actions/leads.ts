@@ -12,6 +12,7 @@ import {
 import { documentIdSchema, leadStatusSchema } from "@/lib/sanity/validation";
 import { client } from "@/sanity/lib/client";
 import { sanityFetch } from "@/sanity/lib/live";
+import type { Lead } from "@/sanity.types";
 
 /**
  * Ensures Clerk metadata is synced with Sanity state.
@@ -129,10 +130,7 @@ export async function createLead(
   return { success: true };
 }
 
-export async function updateLeadStatus(
-  leadId: string,
-  status: "new" | "contacted" | "closed",
-) {
+export async function updateLeadStatus(leadId: string, status: Lead["status"]) {
   leadId = documentIdSchema.parse(leadId);
   status = leadStatusSchema.parse(status);
   const { userId } = await auth();

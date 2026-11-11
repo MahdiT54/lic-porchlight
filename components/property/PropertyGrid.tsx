@@ -1,10 +1,11 @@
 "use client";
 
-import type { PropertyCardData } from "@/types";
+import type { StegaBranded } from "next-sanity";
+import type { USER_SAVED_LISTINGS_QUERY_RESULT } from "@/sanity.types";
 import { PropertyCard } from "./PropertyCard";
 
 interface PropertyGridProps {
-  properties: PropertyCardData[];
+  properties: StegaBranded<NonNullable<USER_SAVED_LISTINGS_QUERY_RESULT>>;
   onSave?: (propertyId: string) => void;
   savedIds?: string[];
   showRemoveButton?: boolean;
