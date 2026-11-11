@@ -1,5 +1,14 @@
 // i made a type library to access to a bunch of types throughout the app centralized in one place
 
+import type { StegaBranded } from "next-sanity";
+import type { USER_SAVED_LISTINGS_QUERY_RESULT } from "@/sanity.types";
+
+// Shared card projection, with support for Visual Editing's encoded strings.
+type PropertyCardResult = NonNullable<USER_SAVED_LISTINGS_QUERY_RESULT>[number];
+export type PropertyCardData =
+  | PropertyCardResult
+  | StegaBranded<PropertyCardResult>;
+
 // Amenity type
 export interface Amenity {
   _id: string;

@@ -1,16 +1,21 @@
 "use client";
 
-import type { Property } from "@/types";
+import type { PropertyCardData } from "@/types";
 import { PropertyCard } from "./PropertyCard";
 
 interface PropertyGridProps {
-  properties: Property[];
+  properties: PropertyCardData[];
   onSave?: (propertyId: string) => void;
   savedIds?: string[];
   showRemoveButton?: boolean;
 }
 
-export function PropertyGrid({ properties, onSave, savedIds = [], showRemoveButton, }: PropertyGridProps) {
+export function PropertyGrid({
+  properties,
+  onSave,
+  savedIds = [],
+  showRemoveButton,
+}: PropertyGridProps) {
   if (properties.length === 0) {
     return (
       <div className="text-center py-12">

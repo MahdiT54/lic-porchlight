@@ -10,18 +10,25 @@ const imageFragment = /* groq */ `
   alt
 `;
 
+// Keep the card data consistent across featured, search, and saved listings.
+const propertyCardFragment = /* groq */ `
+  _id,
+  title,
+  "slug": slug.current,
+  price,
+  propertyType,
+  status,
+  bedrooms,
+  bathrooms,
+  squareFeet,
+  address,
+  "image": images[0] { ${imageFragment} }
+`;
+
 // Featured listings for homepage
 export const FEATURED_PROPERTIES_QUERY = defineQuery(/* groq */ `
   *[_type == "property" && featured == true && status == "active"][0...6] {
-    _id,
-    title,
-    "slug": slug.current,
-    price,
-    bedrooms,
-    bathrooms,
-    squareFeet,
-    address,
-    "image": images[0] { ${imageFragment} },
+    ${propertyCardFragment},
     location
   }
 `);
@@ -45,18 +52,10 @@ export const PROPERTIES_SEARCH_QUERY = defineQuery(/* groq */ `
     && ($priceReduced == false || (originalPrice != null && price < originalPrice))
     && ($amenitiesCount == 0 || count((amenities)[@ in $amenities]) == $amenitiesCount)
   ] | order(createdAt desc) [$start...$end] {
-    _id,
-    title,
-    "slug": slug.current,
-    price,
+    ${propertyCardFragment},
     originalPrice,
-    bedrooms,
-    bathrooms,
-    squareFeet,
     yearBuilt,
     lotSize,
-    address,
-    "image": images[0] { ${imageFragment} },
     location,
     amenities,
     openHouseDate,
@@ -215,16 +214,7 @@ export const LISTING_BY_ID_QUERY = defineQuery(/* groq */ `
 export const USER_SAVED_LISTINGS_QUERY = defineQuery(/* groq */ `
   *[_type == "user" && clerkId == $clerkId][0] {
     savedListings[]-> {
-      _id,
-      title,
-      "slug": slug.current,
-      price,
-      bedrooms,
-      bathrooms,
-      squareFeet,
-      address,
-      "image": images[0] { ${imageFragment} },
-      status
+      ${propertyCardFragment}
     }
   }.savedListings
 `);

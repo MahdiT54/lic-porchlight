@@ -194,14 +194,14 @@ export default async function PropertiesPage({
               <TabsList className="mb-6 bg-background border border-border/50 p-1 rounded-xl">
                 <TabsTrigger
                   value="list"
-                  className="flex items-center gap-2 rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+                  className="flex items-center gap-2 rounded-lg data-active:bg-primary data-active:text-primary-foreground"
                 >
                   <LayoutGrid className="h-4 w-4" aria-hidden="true" />
                   Grid View
                 </TabsTrigger>
                 <TabsTrigger
                   value="map"
-                  className="flex items-center gap-2 rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+                  className="flex items-center gap-2 rounded-lg data-active:bg-primary data-active:text-primary-foreground"
                 >
                   <MapIcon className="h-4 w-4" aria-hidden="true" />
                   Map View

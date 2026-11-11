@@ -13,13 +13,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { FEATURED_PROPERTIES_QUERY } from "@/lib/sanity/queries";
 import { sanityFetch } from "@/sanity/lib/live"; // server component fetcher for sanity queries
-import type { Property } from "@/types";
 
 export default async function HomePage() {
-  const { data } = await sanityFetch({
+  const { data: featuredProperties } = await sanityFetch({
     query: FEATURED_PROPERTIES_QUERY,
   });
-  const featuredProperties = data as Property[];
 
   return (
     <div>
@@ -232,8 +230,8 @@ export default async function HomePage() {
               </h2>
               <p className="text-lg text-muted-foreground mb-8">
                 We understand that buying your first home can be overwhelming.
-                That&apos;s why we&apos;ve designed Porchlight to make the process
-                as simple and stress-free as possible.
+                That&apos;s why we&apos;ve designed Porchlight to make the
+                process as simple and stress-free as possible.
               </p>
 
               <div className="space-y-6">
