@@ -8,7 +8,9 @@ export default defineCliConfig({
   },
   typegen: {
     path: [
-      "./src/**/*.{ts,tsx,js,jsx,mjs,cjs,astro,vue,svelte}",
+      "./actions/**/*.{ts,tsx}",
+      "./components/**/*.{ts,tsx}",
+      "./scripts/**/*.{ts,tsx}",
       "./app/**/*.{ts,tsx,js,jsx,mjs,cjs,astro,vue,svelte}",
       "./sanity/**/*.{ts,tsx,js,jsx,mjs,cjs}",
       "./lib/**/*.{ts,tsx,js,jsx,mjs,cjs}",

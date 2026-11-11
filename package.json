@@ -10,7 +10,9 @@
     "format": "biome format --write",
     "seed": "tsx scripts/seed/seed.ts",
     "seed:clean": "tsx scripts/seed/seed.ts --clean",
-    "typegen": "sanity schema extract --path=./schema.json && sanity typegen generate"
+    "typegen": "sanity schema extract --force --path=./schema.json --enforce-required-fields && sanity typegen generate",
+    "typecheck": "tsc --noEmit",
+    "validate:content": "sanity documents validate"
   },
   "dependencies": {
     "@base-ui/react": "^1.9.0",
@@ -57,3 +59,4 @@
     "typescript": "^5"
   }
 }
+

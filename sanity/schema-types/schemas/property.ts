@@ -1,4 +1,4 @@
-import { defineField, defineType } from "sanity";
+import { defineArrayMember, defineField, defineType } from "sanity";
 
 export const property = defineType({
   name: "property",
@@ -66,48 +66,54 @@ export const property = defineType({
       name: "bedrooms",
       title: "Bedrooms",
       type: "number",
-      validation: (Rule) => Rule.min(0),
+      validation: (Rule) => Rule.required().integer().min(0),
     }),
     defineField({
       name: "bathrooms",
       title: "Bathrooms",
       type: "number",
-      validation: (Rule) => Rule.min(0),
+      validation: (Rule) => Rule.required().min(0),
     }),
     defineField({
       name: "squareFeet",
       title: "Square Feet",
       type: "number",
-      validation: (Rule) => Rule.min(0),
+      validation: (Rule) => Rule.required().min(0),
     }),
     defineField({
       name: "yearBuilt",
       title: "Year Built",
       type: "number",
-      validation: (Rule) => Rule.min(1800).max(new Date().getFullYear()),
+      validation: (Rule) =>
+        Rule.integer().min(1800).max(new Date().getFullYear()),
     }),
     defineField({
       name: "address",
+      validation: (Rule) => Rule.required(),
       title: "Address",
       type: "object",
       fields: [
         defineField({
           name: "street",
+          validation: (Rule) => Rule.required(),
           title: "Street",
           type: "string",
         }),
         defineField({
           name: "city",
+          validation: (Rule) => Rule.required(),
           title: "City",
           type: "string",
         }),
         defineField({
           name: "state",
+          validation: (Rule) => Rule.required(),
           title: "State",
           type: "string",
         }),
         defineField({
           name: "zipCode",
+          validation: (Rule) => Rule.required(),
           title: "ZIP Code",
           type: "string",
         }),
@@ -124,8 +130,9 @@ export const property = defineType({
       title: "Images",
       type: "array",
       of: [
-        {
+        defineArrayMember({
           type: "image",
+          validation: (Rule) => Rule.required().assetRequired(),
           options: {
             hotspot: true,
           },
@@ -136,14 +143,15 @@ export const property = defineType({
               type: "string",
             }),
           ],
-        },
+        }),
       ],
     }),
     defineField({
       name: "amenities",
       title: "Amenities",
       type: "array",
-      of: [{ type: "string" }],
+      of: [defineArrayMember({ type: "string" })],
+      validation: (Rule) => Rule.unique(),
       description: "Amenity values are managed in the Amenities collection",
     }),
     defineField({
@@ -177,12 +185,14 @@ export const property = defineType({
       title: "Featured",
       type: "boolean",
       initialValue: false,
+      validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: "createdAt",
       title: "Created At",
       type: "datetime",
       initialValue: () => new Date().toISOString(),
+      validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: "updatedAt",

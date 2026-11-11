@@ -54,7 +54,7 @@ export function ImageGallery({
     [openLightbox, handleKeyDown],
   );
 
-  if (!images || images.length === 0) {
+  if (images.length === 0) {
     return (
       <div className="aspect-[16/9] bg-muted rounded-2xl flex items-center justify-center">
         <span className="text-muted-foreground">No images available</span>
@@ -140,7 +140,7 @@ export function ImageGallery({
           >
             {images.map((image, index) => (
               <button
-                key={image.asset?._id || index}
+                key={image._key}
                 type="button"
                 onClick={() => setSelectedIndex(index)}
                 role="option"

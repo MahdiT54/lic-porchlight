@@ -18,9 +18,10 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { LoadingButton } from "@/components/ui/loading-button";
+import { profileFields } from "@/lib/sanity/validation";
 
 const formSchema = z.object({
-  name: z.string().trim().min(2, "Name must be at least 2 characters"),
+  name: profileFields.name,
   phone: z.string().optional(),
 });
 

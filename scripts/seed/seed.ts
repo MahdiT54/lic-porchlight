@@ -2,6 +2,14 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 import { createClient } from "@sanity/client";
 import * as dotenv from "dotenv";
+import { z } from "zod";
+import {
+  seedAgentSchema,
+  seedAmenitySchema,
+  seedLeadSchema,
+  seedPropertySchema,
+  seedUserSchema,
+} from "./validation";
 
 // Load environment variables from .env.local (Next.js convention)
 dotenv.config({ path: path.resolve(process.cwd(), ".env.local") });
@@ -21,21 +29,31 @@ const shouldClean = process.argv.includes("--clean");
 
 // Load JSON data
 const dataDir = path.join(__dirname, "data");
-const amenities = JSON.parse(
-  fs.readFileSync(path.join(dataDir, "amenities.json"), "utf-8"),
-);
-const agents = JSON.parse(
-  fs.readFileSync(path.join(dataDir, "agents.json"), "utf-8"),
-);
-const properties = JSON.parse(
-  fs.readFileSync(path.join(dataDir, "properties.json"), "utf-8"),
-);
-const users = JSON.parse(
-  fs.readFileSync(path.join(dataDir, "users.json"), "utf-8"),
-);
-const leads = JSON.parse(
-  fs.readFileSync(path.join(dataDir, "leads.json"), "utf-8"),
-);
+const amenities = z
+  .array(seedAmenitySchema)
+  .parse(
+    JSON.parse(fs.readFileSync(path.join(dataDir, "amenities.json"), "utf-8")),
+  );
+const agents = z
+  .array(seedAgentSchema)
+  .parse(
+    JSON.parse(fs.readFileSync(path.join(dataDir, "agents.json"), "utf-8")),
+  );
+const properties = z
+  .array(seedPropertySchema)
+  .parse(
+    JSON.parse(fs.readFileSync(path.join(dataDir, "properties.json"), "utf-8")),
+  );
+const users = z
+  .array(seedUserSchema)
+  .parse(
+    JSON.parse(fs.readFileSync(path.join(dataDir, "users.json"), "utf-8")),
+  );
+const leads = z
+  .array(seedLeadSchema)
+  .parse(
+    JSON.parse(fs.readFileSync(path.join(dataDir, "leads.json"), "utf-8")),
+  );
 
 async function uploadImage(url: string): Promise<string | null> {
   try {
@@ -46,13 +64,9 @@ async function uploadImage(url: string): Promise<string | null> {
       return null;
     }
     const buffer = await response.arrayBuffer();
-    const asset = await client.assets.upload(
-      "image",
-      Buffer.from(buffer) as unknown as Blob,
-      {
-        filename: `seed-image-${Date.now()}.jpg`,
-      },
-    );
+    const asset = await client.assets.upload("image", Buffer.from(buffer), {
+      filename: `seed-image-${Date.now()}.jpg`,
+    });
     return asset._id;
   } catch (error) {
     console.log(`    Error uploading image: ${error}`);
@@ -64,7 +78,9 @@ async function cleanSeedData() {
   console.log("\n🧹 Cleaning existing seed data...\n");
 
   // Delete all documents with seed_ prefix
-  const seedDocs = await client.fetch(`*[_id match "seed_*"]{ _id, _type }`);
+  const seedDocs = z
+    .array(z.object({ _id: z.string(), _type: z.string() }))
+    .parse(await client.fetch(`*[_id match "seed_*"]{ _id, _type }`));
 
   if (seedDocs.length === 0) {
     console.log("No seed data found to clean.\n");

@@ -1,23 +1,27 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import MapGL, { Marker, NavigationControl, Popup } from "react-map-gl/mapbox";
 import "mapbox-gl/dist/mapbox-gl.css";
-interface MapProperty {
-  _id: string;
-  title: string | null;
-  price: number | null;
-  bedrooms: number | null;
-  bathrooms: number | null;
-  squareFeet: number | null;
-  location?: { lat?: number; lng?: number } | null;
-  address?: { city?: string; state?: string } | null;
-}
+import type { PROPERTY_DETAIL_QUERY_RESULT } from "@/sanity.types";
+
+type MapProperty = Pick<
+  NonNullable<PROPERTY_DETAIL_QUERY_RESULT>,
+  | "_id"
+  | "title"
+  | "price"
+  | "bedrooms"
+  | "bathrooms"
+  | "squareFeet"
+  | "location"
+  | "address"
+>;
+type LocatedProperty = MapProperty & { location: { lat: number; lng: number } };
 
 interface MapViewProps {
   properties: MapProperty[];
-  onPropertyClick?: (property: MapProperty) => void;
+  onPropertyClick?: (property: LocatedProperty) => void;
   className?: string;
 }
 
@@ -26,9 +30,8 @@ export function MapView({
   onPropertyClick,
   className,
 }: MapViewProps) {
-  const [selectedProperty, setSelectedProperty] = useState<MapProperty | null>(
-    null,
-  );
+  const [selectedProperty, setSelectedProperty] =
+    useState<LocatedProperty | null>(null);
   const [viewState, setViewState] = useState({
     longitude: -98.5795,
     latitude: 39.8283,
@@ -38,12 +41,18 @@ export function MapView({
   const hasCenteredRef = useRef(false);
 
   // Calculate bounds from properties if they exist
-  const validProperties = properties.filter(
-    (p) =>
-      typeof p.location?.lat === "number" &&
-      typeof p.location?.lng === "number" &&
-      Number.isFinite(p.location.lat) &&
-      Number.isFinite(p.location.lng),
+  const validProperties = useMemo(
+    () =>
+      properties.filter(
+        (p): p is LocatedProperty =>
+          typeof p.location?.lat === "number" &&
+          typeof p.location?.lng === "number" &&
+          Number.isFinite(p.location.lat) &&
+          Number.isFinite(p.location.lng) &&
+          Math.abs(p.location.lat) <= 90 &&
+          Math.abs(p.location.lng) <= 180,
+      ),
+    [properties],
   );
 
   // Center on first property when properties load (only once)
@@ -53,8 +62,8 @@ export function MapView({
       const firstProperty = validProperties[0];
       if (firstProperty.location) {
         setViewState({
-          longitude: firstProperty.location.lng ?? 0,
-          latitude: firstProperty.location.lat ?? 0,
+          longitude: firstProperty.location.lng,
+          latitude: firstProperty.location.lat,
           zoom: 10,
         });
         hasCenteredRef.current = true;
@@ -63,7 +72,7 @@ export function MapView({
   }, [validProperties]);
 
   const handleMarkerClick = useCallback(
-    (property: MapProperty) => {
+    (property: LocatedProperty) => {
       setSelectedProperty(property);
       if (onPropertyClick) {
         onPropertyClick(property);
@@ -95,8 +104,8 @@ export function MapView({
         {validProperties.map((property) => (
           <Marker
             key={property._id}
-            longitude={property.location?.lng ?? 0}
-            latitude={property.location?.lat ?? 0}
+            longitude={property.location.lng}
+            latitude={property.location.lat}
             anchor="bottom"
             onClick={(e) => {
               e.originalEvent.stopPropagation();
@@ -113,8 +122,8 @@ export function MapView({
 
         {selectedProperty?.location && (
           <Popup
-            longitude={selectedProperty.location.lng ?? 0}
-            latitude={selectedProperty.location.lat ?? 0}
+            longitude={selectedProperty.location.lng}
+            latitude={selectedProperty.location.lat}
             anchor="bottom"
             onClose={() => setSelectedProperty(null)}
             closeButton={true}

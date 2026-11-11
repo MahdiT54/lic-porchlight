@@ -1,6 +1,8 @@
 import * as path from "node:path";
 import { createClient } from "@sanity/client";
 import * as dotenv from "dotenv";
+import { z } from "zod";
+import { seedAgentResultSchema, seedPropertySchema } from "./validation";
 
 // Load environment variables from .env.local (Next.js convention)
 dotenv.config({ path: path.resolve(process.cwd(), ".env.local") });
@@ -18,7 +20,7 @@ const client = createClient({
 const AGENT_EMAIL = "sonny.sangha@gmail.com"; // replace with your agent email for testing
 
 // Property listings to seed for this agent
-const agentListings = [
+const agentListings = z.array(seedPropertySchema).parse([
   {
     _id: "sonny_property_1",
     title: "Stunning Modern Villa with Ocean Views",
@@ -374,7 +376,7 @@ const agentListings = [
       "https://images.unsplash.com/photo-1600566752355-35792bedcfea?w=1200",
     ],
   },
-];
+]);
 
 async function uploadImage(url: string): Promise<string | null> {
   try {
@@ -385,13 +387,9 @@ async function uploadImage(url: string): Promise<string | null> {
       return null;
     }
     const buffer = await response.arrayBuffer();
-    const asset = await client.assets.upload(
-      "image",
-      Buffer.from(buffer) as unknown as Blob,
-      {
-        filename: `seed-image-${Date.now()}.jpg`,
-      },
-    );
+    const asset = await client.assets.upload("image", Buffer.from(buffer), {
+      filename: `seed-image-${Date.now()}.jpg`,
+    });
     return asset._id;
   } catch (error) {
     console.log(`    Error uploading image: ${error}`);
@@ -402,9 +400,11 @@ async function uploadImage(url: string): Promise<string | null> {
 async function findAgentByEmail(
   email: string,
 ): Promise<{ _id: string; name: string } | null> {
-  const agent = await client.fetch(
-    `*[_type == "agent" && email == $email][0]{ _id, name }`,
-    { email },
+  const agent = seedAgentResultSchema.parse(
+    await client.fetch(
+      `*[_type == "agent" && email == $email][0]{ _id, name }`,
+      { email },
+    ),
   );
   return agent;
 }

@@ -68,7 +68,7 @@ export default async function HomePage() {
                   className="h-14 pl-12 text-base"
                 />
               </div>
-              <Button type="submit" size="xl" className="h-14">
+              <Button type="submit" size="lg" className="h-14">
                 <Search className="h-5 w-5" aria-hidden="true" />
                 <span className="ml-2">Search Properties</span>
               </Button>
@@ -114,11 +114,14 @@ export default async function HomePage() {
                 Hand-picked homes curated just for you
               </p>
             </div>
-            <Button variant="outline" asChild className="w-fit">
-              <Link href="/properties">
-                View All Properties
-                <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
-              </Link>
+            <Button
+              variant="outline"
+              className="w-fit"
+              nativeButton={false}
+              render={<Link href="/properties" />}
+            >
+              View All Properties
+              <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
             </Button>
           </div>
 
@@ -133,8 +136,14 @@ export default async function HomePage() {
               <p className="text-muted-foreground text-lg">
                 No featured properties available at the moment.
               </p>
-              <Button variant="outline" asChild className="mt-4">
-                <Link href="/properties">Browse All Properties</Link>
+              <Button
+                variant="outline"
+                className="mt-4"
+                nativeButton={false}
+                render={<Link href="/properties" />}
+              >
+                {" "}
+                Browse All Properties{" "}
               </Button>
             </div>
           )}
@@ -341,19 +350,23 @@ export default async function HomePage() {
                 subscription today.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
-                <Button size="lg" asChild>
-                  <Link href="/pricing">
-                    View Pricing Plans
-                    <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
-                  </Link>
+                <Button
+                  size="lg"
+                  nativeButton={false}
+                  render={<Link href="/pricing" />}
+                >
+                  View Pricing Plans
+                  <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
                 </Button>
                 <Button
                   size="lg"
                   variant="outline"
-                  asChild
                   className="bg-background/10 border-secondary-foreground/20 text-secondary-foreground hover:bg-background/20"
+                  nativeButton={false}
+                  render={<Link href="/dashboard" />}
                 >
-                  <Link href="/dashboard">Go to Agent Dashboard</Link>
+                  {" "}
+                  Go to Agent Dashboard{" "}
                 </Button>
               </div>
             </div>

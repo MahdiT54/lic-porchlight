@@ -1,4 +1,4 @@
-import { defineField, defineType } from "sanity";
+import { defineArrayMember, defineField, defineType } from "sanity";
 
 export const user = defineType({
   name: "user",
@@ -16,7 +16,7 @@ export const user = defineType({
       name: "name",
       title: "Name",
       type: "string",
-      validation: (Rule) => Rule.required(),
+      validation: (Rule) => Rule.required().min(2),
     }),
     defineField({
       name: "email",
@@ -42,10 +42,10 @@ export const user = defineType({
       title: "Saved Listings",
       type: "array",
       of: [
-        {
+        defineArrayMember({
           type: "reference",
           to: [{ type: "property" }],
-        },
+        }),
       ],
     }),
     defineField({
@@ -53,6 +53,7 @@ export const user = defineType({
       title: "Created At",
       type: "datetime",
       initialValue: () => new Date().toISOString(),
+      validation: (Rule) => Rule.required(),
     }),
   ],
   preview: {

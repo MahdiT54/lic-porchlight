@@ -2,12 +2,13 @@
 
 import { auth, clerkClient, currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
-import { client } from "@/lib/sanity/client";
-import { sanityFetch } from "@/lib/sanity/live";
 import {
   AGENT_BY_USER_ID_QUERY,
   AGENT_ID_BY_USER_QUERY,
 } from "@/lib/sanity/queries";
+import { agentProfileSchema, emailSchema } from "@/lib/sanity/validation";
+import { client } from "@/sanity/lib/client";
+import { sanityFetch } from "@/sanity/lib/live";
 import type { AgentOnboardingData, AgentProfileData } from "@/types";
 
 /**
@@ -29,6 +30,8 @@ export async function createAgentDocument() {
 
   // Check if agent already exists
   const { data: existingAgent } = await sanityFetch({
+    stega: false,
+    perspective: "published",
     query: AGENT_ID_BY_USER_QUERY,
     params: { userId },
   });
@@ -48,7 +51,7 @@ export async function createAgentDocument() {
     _type: "agent",
     userId,
     name: `${user.firstName || ""} ${user.lastName || ""}`.trim() || "Agent",
-    email: user.emailAddresses[0]?.emailAddress || "",
+    email: emailSchema.parse(user.primaryEmailAddress?.emailAddress),
     onboardingComplete: false,
     createdAt: new Date().toISOString(),
   });
@@ -57,6 +60,7 @@ export async function createAgentDocument() {
 }
 
 export async function completeAgentOnboarding(data: AgentOnboardingData) {
+  data = agentProfileSchema.parse(data);
   const { userId } = await auth();
 
   if (!userId) {
@@ -64,6 +68,8 @@ export async function completeAgentOnboarding(data: AgentOnboardingData) {
   }
 
   const { data: agent } = await sanityFetch({
+    stega: false,
+    perspective: "published",
     query: AGENT_ID_BY_USER_QUERY,
     params: { userId },
   });
@@ -99,6 +105,7 @@ export async function completeAgentOnboarding(data: AgentOnboardingData) {
 }
 
 export async function updateAgentProfile(data: AgentProfileData) {
+  data = agentProfileSchema.parse(data);
   const { userId } = await auth();
 
   if (!userId) {
@@ -106,6 +113,8 @@ export async function updateAgentProfile(data: AgentProfileData) {
   }
 
   const { data: agent } = await sanityFetch({
+    stega: false,
+    perspective: "published",
     query: AGENT_ID_BY_USER_QUERY,
     params: { userId },
   });
@@ -127,6 +136,8 @@ export async function updateAgentProfile(data: AgentProfileData) {
 
 export async function getAgentByUserId(userId: string) {
   const { data: agent } = await sanityFetch({
+    stega: false,
+    perspective: "published",
     query: AGENT_BY_USER_ID_QUERY,
     params: { userId },
   });

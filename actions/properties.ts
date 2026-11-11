@@ -2,49 +2,18 @@
 
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
-import { client } from "@/lib/sanity/client";
-import { sanityFetch } from "@/lib/sanity/live";
 import {
   AGENT_ID_BY_USER_QUERY,
   PROPERTY_AGENT_REF_QUERY,
 } from "@/lib/sanity/queries";
-
-interface ImageReference {
-  _type: "image";
-  _key: string;
-  asset: {
-    _type: "reference";
-    _ref: string;
-  };
-}
-
-interface Address {
-  street: string;
-  city: string;
-  state: string;
-  zipCode: string;
-}
-
-interface GeoPoint {
-  lat: number;
-  lng: number;
-}
-
-interface ListingFormDataWithImages {
-  title: string;
-  description: string;
-  price: number;
-  propertyType: "house" | "apartment" | "condo" | "townhouse" | "land";
-  status?: "active" | "pending" | "sold";
-  bedrooms: number;
-  bathrooms: number;
-  squareFeet: number;
-  yearBuilt?: number;
-  address: Address;
-  location?: GeoPoint;
-  amenities?: string[];
-  images?: ImageReference[];
-}
+import {
+  documentIdSchema,
+  type ListingInput,
+  listingSchema,
+  propertyStatusSchema,
+} from "@/lib/sanity/validation";
+import { client } from "@/sanity/lib/client";
+import { sanityFetch } from "@/sanity/lib/live";
 
 function slugify(text: string): string {
   return text
@@ -55,7 +24,8 @@ function slugify(text: string): string {
     .trim();
 }
 
-export async function createListing(data: ListingFormDataWithImages) {
+export async function createListing(data: ListingInput) {
+  data = listingSchema.parse(data);
   const { userId } = await auth();
 
   if (!userId) {
@@ -63,6 +33,8 @@ export async function createListing(data: ListingFormDataWithImages) {
   }
 
   const { data: agent } = await sanityFetch({
+    stega: false,
+    perspective: "published",
     query: AGENT_ID_BY_USER_QUERY,
     params: { userId },
   });
@@ -98,10 +70,9 @@ export async function createListing(data: ListingFormDataWithImages) {
   redirect("/dashboard/listings");
 }
 
-export async function updateListing(
-  listingId: string,
-  data: ListingFormDataWithImages,
-) {
+export async function updateListing(listingId: string, data: ListingInput) {
+  listingId = documentIdSchema.parse(listingId);
+  data = listingSchema.parse(data);
   const { userId } = await auth();
 
   if (!userId) {
@@ -109,6 +80,8 @@ export async function updateListing(
   }
 
   const { data: agent } = await sanityFetch({
+    stega: false,
+    perspective: "published",
     query: AGENT_ID_BY_USER_QUERY,
     params: { userId },
   });
@@ -119,11 +92,13 @@ export async function updateListing(
 
   // Verify ownership
   const { data: listing } = await sanityFetch({
+    stega: false,
+    perspective: "published",
     query: PROPERTY_AGENT_REF_QUERY,
     params: { id: listingId },
   });
 
-  if (!listing || listing.agent._ref !== agent._id) {
+  if (!listing || listing.agent?._ref !== agent._id) {
     throw new Error("Unauthorized");
   }
 
@@ -155,6 +130,8 @@ export async function updateListingStatus(
   listingId: string,
   status: "active" | "pending" | "sold",
 ) {
+  listingId = documentIdSchema.parse(listingId);
+  status = propertyStatusSchema.parse(status);
   const { userId } = await auth();
 
   if (!userId) {
@@ -162,6 +139,8 @@ export async function updateListingStatus(
   }
 
   const { data: agent } = await sanityFetch({
+    stega: false,
+    perspective: "published",
     query: AGENT_ID_BY_USER_QUERY,
     params: { userId },
   });
@@ -172,11 +151,13 @@ export async function updateListingStatus(
 
   // Verify ownership
   const { data: listing } = await sanityFetch({
+    stega: false,
+    perspective: "published",
     query: PROPERTY_AGENT_REF_QUERY,
     params: { id: listingId },
   });
 
-  if (!listing || listing.agent._ref !== agent._id) {
+  if (!listing || listing.agent?._ref !== agent._id) {
     throw new Error("Unauthorized");
   }
 
@@ -190,6 +171,7 @@ export async function updateListingStatus(
 }
 
 export async function deleteListing(listingId: string) {
+  listingId = documentIdSchema.parse(listingId);
   const { userId } = await auth();
 
   if (!userId) {
@@ -197,6 +179,8 @@ export async function deleteListing(listingId: string) {
   }
 
   const { data: agent } = await sanityFetch({
+    stega: false,
+    perspective: "published",
     query: AGENT_ID_BY_USER_QUERY,
     params: { userId },
   });
@@ -207,11 +191,13 @@ export async function deleteListing(listingId: string) {
 
   // Verify ownership
   const { data: listing } = await sanityFetch({
+    stega: false,
+    perspective: "published",
     query: PROPERTY_AGENT_REF_QUERY,
     params: { id: listingId },
   });
 
-  if (!listing || listing.agent._ref !== agent._id) {
+  if (!listing || listing.agent?._ref !== agent._id) {
     throw new Error("Unauthorized");
   }
 

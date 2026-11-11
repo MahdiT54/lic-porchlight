@@ -1,15 +1,17 @@
 "use server";
 
 import { auth, clerkClient } from "@clerk/nextjs/server";
-import { client } from "@/sanity/lib/client";
-import { sanityFetch } from "@/sanity/lib/live";
 import {
   AGENT_BY_USER_ID_QUERY,
   AGENT_ID_BY_USER_QUERY,
   LEAD_AGENT_REF_QUERY,
   LEAD_EXISTS_QUERY,
+  PROPERTY_AGENT_REF_QUERY,
   USER_CONTACT_QUERY,
 } from "@/lib/sanity/queries";
+import { documentIdSchema, leadStatusSchema } from "@/lib/sanity/validation";
+import { client } from "@/sanity/lib/client";
+import { sanityFetch } from "@/sanity/lib/live";
 
 /**
  * Ensures Clerk metadata is synced with Sanity state.
@@ -21,11 +23,14 @@ async function ensureOnboardingComplete(userId: string) {
 
   // Check if user exists in Sanity (regular user)
   const { data: user } = await sanityFetch({
+    stega: false,
+    perspective: "published",
     query: USER_CONTACT_QUERY,
     params: { clerkId: userId },
   });
 
-  if (user) { //we check metadata because that cookie is gonna be with the user for that time
+  if (user) {
+    //we check metadata because that cookie is gonna be with the user for that time
     // User exists - sync Clerk metadata if needed
     if (!clerkUser.publicMetadata?.onboardingComplete) {
       await clerk.users.updateUser(userId, {
@@ -40,6 +45,8 @@ async function ensureOnboardingComplete(userId: string) {
 
   // Check if agent exists in Sanity (agent user)
   const { data: agent } = await sanityFetch({
+    stega: false,
+    perspective: "published",
     query: AGENT_BY_USER_ID_QUERY,
     params: { userId },
   });
@@ -69,7 +76,9 @@ export async function createLead(
   requiresOnboarding?: boolean;
   message?: string;
 }> {
-  const { userId } = await auth();// lets check if the user is authenticated
+  propertyId = documentIdSchema.parse(propertyId);
+  agentId = documentIdSchema.parse(agentId);
+  const { userId } = await auth(); // lets check if the user is authenticated
 
   if (!userId) {
     throw new Error("Not authenticated");
@@ -82,8 +91,21 @@ export async function createLead(
     return { success: false, requiresOnboarding: true };
   }
 
+  // Resolve the recipient from the property rather than trusting a caller-supplied agent.
+  const { data: property } = await sanityFetch({
+    query: PROPERTY_AGENT_REF_QUERY,
+    params: { id: propertyId },
+    perspective: "published",
+    stega: false,
+  });
+  if (!property || property.agent?._ref !== agentId) {
+    throw new Error("Property or agent not found");
+  }
+
   // Check if lead already exists for this user/property combination
   const { data: existingLead } = await sanityFetch({
+    stega: false,
+    perspective: "published",
     query: LEAD_EXISTS_QUERY,
     params: { propertyId, email: user.email },
   });
@@ -111,6 +133,8 @@ export async function updateLeadStatus(
   leadId: string,
   status: "new" | "contacted" | "closed",
 ) {
+  leadId = documentIdSchema.parse(leadId);
+  status = leadStatusSchema.parse(status);
   const { userId } = await auth();
 
   if (!userId) {
@@ -119,6 +143,8 @@ export async function updateLeadStatus(
 
   // Get agent to verify ownership
   const { data: agent } = await sanityFetch({
+    stega: false,
+    perspective: "published",
     query: AGENT_ID_BY_USER_QUERY,
     params: { userId },
   });
@@ -129,6 +155,8 @@ export async function updateLeadStatus(
 
   // Verify lead belongs to this agent
   const { data: lead } = await sanityFetch({
+    stega: false,
+    perspective: "published",
     query: LEAD_AGENT_REF_QUERY,
     params: { leadId },
   });

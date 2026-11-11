@@ -14,12 +14,12 @@ import { PropertyGrid } from "@/components/property/PropertyGrid";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { sanityFetch } from "@/sanity/lib/live";
 import {
   AMENITIES_QUERY,
   PROPERTIES_COUNT_QUERY,
   PROPERTIES_SEARCH_QUERY,
 } from "@/lib/sanity/queries";
+import { sanityFetch } from "@/sanity/lib/live";
 
 export const metadata: Metadata = {
   title: "Browse Properties",
@@ -220,19 +220,24 @@ export default async function PropertiesPage({
                         aria-label="Pagination"
                       >
                         {page > 1 ? (
-                          <Button variant="outline" size="sm" asChild>
-                            <Link
-                              href={`/properties?${new URLSearchParams({
-                                ...params,
-                                page: String(page - 1),
-                              }).toString()}`}
-                            >
-                              <ChevronLeft
-                                className="h-4 w-4 mr-1"
-                                aria-hidden="true"
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            nativeButton={false}
+                            render={
+                              <Link
+                                href={`/properties?${new URLSearchParams({
+                                  ...params,
+                                  page: String(page - 1),
+                                }).toString()}`}
                               />
-                              Previous
-                            </Link>
+                            }
+                          >
+                            <ChevronLeft
+                              className="h-4 w-4 mr-1"
+                              aria-hidden="true"
+                            />
+                            Previous
                           </Button>
                         ) : (
                           <Button variant="outline" size="sm" disabled>
@@ -256,19 +261,24 @@ export default async function PropertiesPage({
                         </span>
 
                         {page < totalPages ? (
-                          <Button variant="outline" size="sm" asChild>
-                            <Link
-                              href={`/properties?${new URLSearchParams({
-                                ...params,
-                                page: String(page + 1),
-                              }).toString()}`}
-                            >
-                              Next
-                              <ChevronRight
-                                className="h-4 w-4 ml-1"
-                                aria-hidden="true"
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            nativeButton={false}
+                            render={
+                              <Link
+                                href={`/properties?${new URLSearchParams({
+                                  ...params,
+                                  page: String(page + 1),
+                                }).toString()}`}
                               />
-                            </Link>
+                            }
+                          >
+                            Next
+                            <ChevronRight
+                              className="h-4 w-4 ml-1"
+                              aria-hidden="true"
+                            />
                           </Button>
                         ) : (
                           <Button variant="outline" size="sm" disabled>
@@ -300,8 +310,13 @@ export default async function PropertiesPage({
                         : "There are no properties available at the moment."}
                     </p>
                     {hasFilters && (
-                      <Button variant="outline" asChild>
-                        <Link href="/properties">Clear All Filters</Link>
+                      <Button
+                        variant="outline"
+                        nativeButton={false}
+                        render={<Link href="/properties" />}
+                      >
+                        {" "}
+                        Clear All Filters{" "}
                       </Button>
                     )}
                   </div>

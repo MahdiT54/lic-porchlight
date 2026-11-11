@@ -2,17 +2,22 @@
 
 import { auth, clerkClient, currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
-import { client } from "@/sanity/lib/client";
-import { sanityFetch } from "@/sanity/lib/live";
-
 import {
   AGENT_BY_USER_ID_QUERY,
   USER_EXISTS_QUERY,
   USER_SAVED_IDS_QUERY,
 } from "@/lib/sanity/queries";
+import {
+  documentIdSchema,
+  emailSchema,
+  profileSchema,
+} from "@/lib/sanity/validation";
+import { client } from "@/sanity/lib/client";
+import { sanityFetch } from "@/sanity/lib/live";
 import type { UserOnboardingData, UserProfileData } from "@/types";
 
 export async function completeUserOnboarding(data: UserOnboardingData) {
+  data = { ...data, ...profileSchema.parse(data) };
   const { userId } = await auth();
 
   if (!userId) {
@@ -20,10 +25,12 @@ export async function completeUserOnboarding(data: UserOnboardingData) {
   }
 
   const clerkUser = await currentUser();
-  const email = clerkUser?.emailAddresses[0]?.emailAddress || data.email;
+  const email = emailSchema.parse(clerkUser?.primaryEmailAddress?.emailAddress);
 
   // Check if user already exists
   const { data: existingUser } = await sanityFetch({
+    stega: false,
+    perspective: "published",
     query: USER_EXISTS_QUERY,
     params: { clerkId: userId },
   });
@@ -60,6 +67,7 @@ export async function completeUserOnboarding(data: UserOnboardingData) {
 }
 
 export async function updateUserProfile(data: UserProfileData) {
+  data = profileSchema.parse(data);
   const { userId } = await auth();
 
   if (!userId) {
@@ -67,6 +75,8 @@ export async function updateUserProfile(data: UserProfileData) {
   }
 
   const { data: user } = await sanityFetch({
+    stega: false,
+    perspective: "published",
     query: USER_EXISTS_QUERY,
     params: { clerkId: userId },
   });
@@ -88,12 +98,16 @@ export async function updateUserProfile(data: UserProfileData) {
  * Ensures Clerk metadata is synced with Sanity state for saving listings.
  * Returns user with saved IDs if found, null if user needs onboarding.
  */
-async function ensureOnboardingCompleteForSave(userId: string) {
+async function ensureOnboardingCompleteForSave(
+  userId: string,
+): Promise<{ _id: string; savedIds: string[] } | null> {
   const clerk = await clerkClient();
   const clerkUser = await clerk.users.getUser(userId);
 
   // Check if user exists in Sanity
   const { data: user } = await sanityFetch({
+    stega: false,
+    perspective: "published",
     query: USER_SAVED_IDS_QUERY,
     params: { clerkId: userId },
   });
@@ -113,6 +127,8 @@ async function ensureOnboardingCompleteForSave(userId: string) {
 
   // Check if agent exists - agents can also save properties
   const { data: agent } = await sanityFetch({
+    stega: false,
+    perspective: "published",
     query: AGENT_BY_USER_ID_QUERY,
     params: { userId },
   });
@@ -144,6 +160,7 @@ async function ensureOnboardingCompleteForSave(userId: string) {
 export async function toggleSavedListing(
   propertyId: string,
 ): Promise<{ success: boolean; requiresOnboarding?: boolean }> {
+  propertyId = documentIdSchema.parse(propertyId);
   const { userId } = await auth();
 
   if (!userId) {
@@ -157,7 +174,7 @@ export async function toggleSavedListing(
     return { success: false, requiresOnboarding: true };
   }
 
-  const isSaved = user.savedIds?.includes(propertyId);
+  const isSaved = user.savedIds.includes(propertyId);
 
   if (isSaved) {
     // Remove from saved
@@ -185,6 +202,8 @@ export async function getUserSavedIds(): Promise<string[]> {
   }
 
   const { data: user } = await sanityFetch({
+    stega: false,
+    perspective: "published",
     query: USER_SAVED_IDS_QUERY,
     params: { clerkId: userId },
   });

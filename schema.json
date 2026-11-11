@@ -39,14 +39,14 @@
         "value": {
           "type": "string"
         },
-        "optional": true
+        "optional": false
       },
       "label": {
         "type": "objectAttribute",
         "value": {
           "type": "string"
         },
-        "optional": true
+        "optional": false
       },
       "icon": {
         "type": "objectAttribute",
@@ -164,21 +164,21 @@
         "value": {
           "type": "string"
         },
-        "optional": true
+        "optional": false
       },
       "name": {
         "type": "objectAttribute",
         "value": {
           "type": "string"
         },
-        "optional": true
+        "optional": false
       },
       "email": {
         "type": "objectAttribute",
         "value": {
           "type": "string"
         },
-        "optional": true
+        "optional": false
       },
       "phone": {
         "type": "objectAttribute",
@@ -261,7 +261,7 @@
         "value": {
           "type": "string"
         },
-        "optional": true
+        "optional": false
       }
     }
   },
@@ -283,28 +283,28 @@
           "value": {
             "type": "number"
           },
-          "optional": true
+          "optional": false
         },
         "bottom": {
           "type": "objectAttribute",
           "value": {
             "type": "number"
           },
-          "optional": true
+          "optional": false
         },
         "left": {
           "type": "objectAttribute",
           "value": {
             "type": "number"
           },
-          "optional": true
+          "optional": false
         },
         "right": {
           "type": "objectAttribute",
           "value": {
             "type": "number"
           },
-          "optional": true
+          "optional": false
         }
       }
     }
@@ -327,28 +327,28 @@
           "value": {
             "type": "number"
           },
-          "optional": true
+          "optional": false
         },
         "y": {
           "type": "objectAttribute",
           "value": {
             "type": "number"
           },
-          "optional": true
+          "optional": false
         },
         "height": {
           "type": "objectAttribute",
           "value": {
             "type": "number"
           },
-          "optional": true
+          "optional": false
         },
         "width": {
           "type": "objectAttribute",
           "value": {
             "type": "number"
           },
-          "optional": true
+          "optional": false
         }
       }
     }
@@ -424,7 +424,7 @@
           "type": "inline",
           "name": "property.reference"
         },
-        "optional": true
+        "optional": false
       },
       "agent": {
         "type": "objectAttribute",
@@ -432,21 +432,21 @@
           "type": "inline",
           "name": "agent.reference"
         },
-        "optional": true
+        "optional": false
       },
       "buyerName": {
         "type": "objectAttribute",
         "value": {
           "type": "string"
         },
-        "optional": true
+        "optional": false
       },
       "buyerEmail": {
         "type": "objectAttribute",
         "value": {
           "type": "string"
         },
-        "optional": true
+        "optional": false
       },
       "buyerPhone": {
         "type": "objectAttribute",
@@ -481,14 +481,14 @@
             }
           ]
         },
-        "optional": true
+        "optional": false
       },
       "createdAt": {
         "type": "objectAttribute",
         "value": {
           "type": "string"
         },
-        "optional": true
+        "optional": false
       }
     }
   },
@@ -532,7 +532,7 @@
         "value": {
           "type": "string"
         },
-        "optional": true
+        "optional": false
       },
       "slug": {
         "type": "objectAttribute",
@@ -540,7 +540,7 @@
           "type": "inline",
           "name": "slug"
         },
-        "optional": true
+        "optional": false
       },
       "description": {
         "type": "objectAttribute",
@@ -554,7 +554,7 @@
         "value": {
           "type": "number"
         },
-        "optional": true
+        "optional": false
       },
       "propertyType": {
         "type": "objectAttribute",
@@ -583,7 +583,7 @@
             }
           ]
         },
-        "optional": true
+        "optional": false
       },
       "status": {
         "type": "objectAttribute",
@@ -604,28 +604,28 @@
             }
           ]
         },
-        "optional": true
+        "optional": false
       },
       "bedrooms": {
         "type": "objectAttribute",
         "value": {
           "type": "number"
         },
-        "optional": true
+        "optional": false
       },
       "bathrooms": {
         "type": "objectAttribute",
         "value": {
           "type": "number"
         },
-        "optional": true
+        "optional": false
       },
       "squareFeet": {
         "type": "objectAttribute",
         "value": {
           "type": "number"
         },
-        "optional": true
+        "optional": false
       },
       "yearBuilt": {
         "type": "objectAttribute",
@@ -644,32 +644,32 @@
               "value": {
                 "type": "string"
               },
-              "optional": true
+              "optional": false
             },
             "city": {
               "type": "objectAttribute",
               "value": {
                 "type": "string"
               },
-              "optional": true
+              "optional": false
             },
             "state": {
               "type": "objectAttribute",
               "value": {
                 "type": "string"
               },
-              "optional": true
+              "optional": false
             },
             "zipCode": {
               "type": "objectAttribute",
               "value": {
                 "type": "string"
               },
-              "optional": true
+              "optional": false
             }
           }
         },
-        "optional": true
+        "optional": false
       },
       "location": {
         "type": "objectAttribute",
@@ -692,7 +692,7 @@
                   "type": "inline",
                   "name": "sanity.imageAsset.reference"
                 },
-                "optional": true
+                "optional": false
               },
               "media": {
                 "type": "objectAttribute",
@@ -763,7 +763,7 @@
           "type": "inline",
           "name": "agent.reference"
         },
-        "optional": true
+        "optional": false
       },
       "lotSize": {
         "type": "objectAttribute",
@@ -791,14 +791,14 @@
         "value": {
           "type": "boolean"
         },
-        "optional": true
+        "optional": false
       },
       "createdAt": {
         "type": "objectAttribute",
         "value": {
           "type": "string"
         },
-        "optional": true
+        "optional": false
       },
       "updatedAt": {
         "type": "objectAttribute",
@@ -849,21 +849,21 @@
         "value": {
           "type": "string"
         },
-        "optional": true
+        "optional": false
       },
       "name": {
         "type": "objectAttribute",
         "value": {
           "type": "string"
         },
-        "optional": true
+        "optional": false
       },
       "email": {
         "type": "objectAttribute",
         "value": {
           "type": "string"
         },
-        "optional": true
+        "optional": false
       },
       "phone": {
         "type": "objectAttribute",
@@ -945,14 +945,14 @@
         "value": {
           "type": "boolean"
         },
-        "optional": true
+        "optional": false
       },
       "createdAt": {
         "type": "objectAttribute",
         "value": {
           "type": "string"
         },
-        "optional": true
+        "optional": false
       }
     }
   },
@@ -1011,7 +1011,7 @@
           "value": {
             "type": "string"
           },
-          "optional": true
+          "optional": false
         },
         "source": {
           "type": "objectAttribute",
@@ -1157,21 +1157,21 @@
           "value": {
             "type": "number"
           },
-          "optional": true
+          "optional": false
         },
         "width": {
           "type": "objectAttribute",
           "value": {
             "type": "number"
           },
-          "optional": true
+          "optional": false
         },
         "aspectRatio": {
           "type": "objectAttribute",
           "value": {
             "type": "number"
           },
-          "optional": true
+          "optional": false
         }
       }
     }
@@ -1326,35 +1326,35 @@
         "value": {
           "type": "string"
         },
-        "optional": true
+        "optional": false
       },
       "extension": {
         "type": "objectAttribute",
         "value": {
           "type": "string"
         },
-        "optional": true
+        "optional": false
       },
       "mimeType": {
         "type": "objectAttribute",
         "value": {
           "type": "string"
         },
-        "optional": true
+        "optional": false
       },
       "size": {
         "type": "objectAttribute",
         "value": {
           "type": "number"
         },
-        "optional": true
+        "optional": false
       },
       "assetId": {
         "type": "objectAttribute",
         "value": {
           "type": "string"
         },
-        "optional": true
+        "optional": false
       },
       "uploadId": {
         "type": "objectAttribute",
@@ -1368,14 +1368,14 @@
         "value": {
           "type": "string"
         },
-        "optional": true
+        "optional": false
       },
       "url": {
         "type": "objectAttribute",
         "value": {
           "type": "string"
         },
-        "optional": true
+        "optional": false
       },
       "source": {
         "type": "objectAttribute",
@@ -1499,35 +1499,35 @@
         "value": {
           "type": "string"
         },
-        "optional": true
+        "optional": false
       },
       "extension": {
         "type": "objectAttribute",
         "value": {
           "type": "string"
         },
-        "optional": true
+        "optional": false
       },
       "mimeType": {
         "type": "objectAttribute",
         "value": {
           "type": "string"
         },
-        "optional": true
+        "optional": false
       },
       "size": {
         "type": "objectAttribute",
         "value": {
           "type": "number"
         },
-        "optional": true
+        "optional": false
       },
       "assetId": {
         "type": "objectAttribute",
         "value": {
           "type": "string"
         },
-        "optional": true
+        "optional": false
       },
       "uploadId": {
         "type": "objectAttribute",
@@ -1541,14 +1541,14 @@
         "value": {
           "type": "string"
         },
-        "optional": true
+        "optional": false
       },
       "url": {
         "type": "objectAttribute",
         "value": {
           "type": "string"
         },
-        "optional": true
+        "optional": false
       },
       "metadata": {
         "type": "objectAttribute",

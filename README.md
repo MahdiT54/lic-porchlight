@@ -18,3 +18,22 @@ Interactive Mapbox maps with property markers
 Type-safe schemas with auto-generated TypeScript (typegen)
 Server Actions + Server Components for optimal performance
 React 19 + React Compiler for blazing fast renders
+
+
+## Sanity type and validation workflow
+
+Sanity schemas in `sanity/schema-types/schemas` define required document fields.
+`pnpm typegen` extracts those requirements and regenerates `sanity.types.ts`, including
+query projections. Regenerate both `schema.json` and `sanity.types.ts` whenever a schema
+or query changes. Components should use the generated query result, since a projection
+may omit fields present on the full document. Mutation input types come from the Zod
+validators in `lib/sanity/validation.ts`; server actions validate them before writing.
+Studio validation does not run for API mutations.
+
+Run `pnpm typecheck` and `pnpm exec tsx --test lib/sanity/validation.test.ts` locally.
+With valid Sanity CLI credentials, run `pnpm validate:content --yes --level error` to
+check existing content without changing it. The current dataset audit could not complete
+because the available credentials were rejected. Fix invalid existing documents before
+removing read fallbacks: required validation and initial values do not backfill data.
+Drafts, missing documents, optional media/geopoints, and unresolved references still need
+runtime checks. No dataset migration or content writes are part of this change.

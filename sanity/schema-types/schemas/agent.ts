@@ -16,7 +16,7 @@ export const agent = defineType({
       name: "name",
       title: "Name",
       type: "string",
-      validation: (Rule) => Rule.required(),
+      validation: (Rule) => Rule.required().min(2),
     }),
     defineField({
       name: "email",
@@ -58,12 +58,14 @@ export const agent = defineType({
       title: "Onboarding Complete",
       type: "boolean",
       initialValue: false,
+      validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: "createdAt",
       title: "Created At",
       type: "datetime",
       initialValue: () => new Date().toISOString(),
+      validation: (Rule) => Rule.required(),
     }),
   ],
   preview: {

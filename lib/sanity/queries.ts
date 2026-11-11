@@ -7,6 +7,7 @@ const imageFragment = /* groq */ `
     url,
     metadata { lqip, dimensions }
   },
+  _key,
   alt
 `;
 
@@ -310,7 +311,7 @@ export const USER_CONTACT_QUERY = defineQuery(/* groq */ `
 
 // User with saved IDs
 export const USER_SAVED_IDS_QUERY = defineQuery(/* groq */ `
-  *[_type == "user" && clerkId == $clerkId][0]{ _id, "savedIds": savedListings[]._ref }
+  *[_type == "user" && clerkId == $clerkId][0]{ _id, "savedIds": coalesce(savedListings[]._ref, []) }
 `);
 
 // Check if lead exists for property/email

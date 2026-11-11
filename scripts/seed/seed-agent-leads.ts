@@ -1,6 +1,8 @@
 import * as path from "node:path";
 import { createClient } from "@sanity/client";
 import * as dotenv from "dotenv";
+import { z } from "zod";
+import { seedAgentResultSchema, seedLeadSchema } from "./validation";
 
 // Load environment variables from .env.local (Next.js convention)
 dotenv.config({ path: path.resolve(process.cwd(), ".env.local") });
@@ -18,7 +20,7 @@ const client = createClient({
 const AGENT_EMAIL = "sonny.sangha@gmail.com";
 
 // Leads to seed - will be matched with actual property IDs
-const leadsData = [
+const leadsData = z.array(seedLeadSchema).parse([
   // Leads for Stunning Modern Villa with Ocean Views (sonny_property_1)
   {
     _id: "sonny_lead_1",
@@ -258,14 +260,16 @@ const leadsData = [
     status: "contacted",
     daysAgo: 9,
   },
-];
+]);
 
 async function findAgentByEmail(
   email: string,
 ): Promise<{ _id: string; name: string } | null> {
-  const agent = await client.fetch(
-    `*[_type == "agent" && email == $email][0]{ _id, name }`,
-    { email },
+  const agent = seedAgentResultSchema.parse(
+    await client.fetch(
+      `*[_type == "agent" && email == $email][0]{ _id, name }`,
+      { email },
+    ),
   );
   return agent;
 }
