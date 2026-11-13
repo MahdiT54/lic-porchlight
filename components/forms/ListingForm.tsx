@@ -1,6 +1,7 @@
 "use client";
 // this component essentially takes all values for a listing & then accepts & handles it
 import { zodResolver } from "@hookform/resolvers/zod";
+import Link from "next/link";
 import { type StegaBranded, stegaClean } from "next-sanity";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
@@ -310,7 +311,7 @@ export function ListingForm({
                       defaultValue={field.value}
                     >
                       <FormControl>
-                        <SelectTrigger>
+                        <SelectTrigger className="w-full">
                           <SelectValue placeholder="Select type" />
                         </SelectTrigger>
                       </FormControl>
@@ -340,7 +341,7 @@ export function ListingForm({
                       defaultValue={field.value}
                     >
                       <FormControl>
-                        <SelectTrigger>
+                        <SelectTrigger className="w-full">
                           <SelectValue placeholder="Select status" />
                         </SelectTrigger>
                       </FormControl>
@@ -581,8 +582,12 @@ export function ListingForm({
         </Card>
 
         <div className="flex justify-end gap-4">
-          <Button type="button" variant="outline" asChild>
-            <a href="/dashboard/listings">Cancel</a>
+          <Button
+            variant="outline"
+            nativeButton={false}
+            render={<Link href="/dashboard/listings" />}
+          >
+            Cancel
           </Button>
           <LoadingButton
             type="submit"

@@ -22,12 +22,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { urlFor } from "@/sanity/lib/image";
-import { sanityFetch } from "@/sanity/lib/live";
 import {
   AGENT_ID_BY_USER_QUERY,
   AGENT_LISTINGS_QUERY,
 } from "@/lib/sanity/queries";
+import { urlFor } from "@/sanity/lib/image";
+import { sanityFetch } from "@/sanity/lib/live";
 
 export default async function ListingsPage() {
   // Middleware guarantees: authenticated + has agent plan + onboarding complete
@@ -65,11 +65,12 @@ export default async function ListingsPage() {
         title="My Listings"
         subtitle="Manage your property listings"
         action={
-          <Button asChild>
-            <Link href="/dashboard/listings/new">
-              <Plus className="h-4 w-4 mr-2" />
-              Add Listing
-            </Link>
+          <Button
+            nativeButton={false}
+            render={<Link href="/dashboard/listings/new" />}
+          >
+            <Plus className="size-4" />
+            Add Listing
           </Button>
         }
       />
@@ -138,22 +139,34 @@ export default async function ListingsPage() {
                     </TableCell>
                     <TableCell>
                       <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="icon">
-                            <MoreHorizontal className="h-4 w-4" />
-                          </Button>
+                        <DropdownMenuTrigger
+                          render={
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              aria-label="Listing actions"
+                            />
+                          }
+                        >
+                          <MoreHorizontal className="size-4" />
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                          <DropdownMenuItem asChild>
-                            <Link href={`/dashboard/listings/${listing._id}`}>
-                              <Pencil className="h-4 w-4 mr-2" />
-                              Edit
-                            </Link>
+                          <DropdownMenuItem
+                            render={
+                              <Link
+                                href={`/dashboard/listings/${listing._id}`}
+                              />
+                            }
+                          >
+                            <Pencil className="size-4" />
+                            Edit
                           </DropdownMenuItem>
-                          <DropdownMenuItem asChild>
-                            <Link href={`/properties/${listing._id}`}>
-                              View
-                            </Link>
+                          <DropdownMenuItem
+                            render={
+                              <Link href={`/properties/${listing._id}`} />
+                            }
+                          >
+                            View
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
                           <DeleteListingButton listingId={listing._id} />
@@ -171,11 +184,12 @@ export default async function ListingsPage() {
           title="No listings yet"
           description="Create your first property listing to get started."
           action={
-            <Button asChild>
-              <Link href="/dashboard/listings/new">
-                <Plus className="h-4 w-4 mr-2" />
-                Create Listing
-              </Link>
+            <Button
+              nativeButton={false}
+              render={<Link href="/dashboard/listings/new" />}
+            >
+              <Plus className="size-4" />
+              Create Listing
             </Button>
           }
         />

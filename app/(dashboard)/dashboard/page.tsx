@@ -10,13 +10,13 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { sanityFetch } from "@/sanity/lib/live";
 import {
   AGENT_DASHBOARD_QUERY,
   DASHBOARD_LEADS_COUNT_QUERY,
   DASHBOARD_LISTINGS_COUNT_QUERY,
   DASHBOARD_NEW_LEADS_COUNT_QUERY,
 } from "@/lib/sanity/queries";
+import { sanityFetch } from "@/sanity/lib/live";
 
 export const metadata: Metadata = {
   title: "Dashboard",
@@ -69,11 +69,13 @@ export default async function DashboardPage() {
             Here&apos;s an overview of your activity
           </p>
         </div>
-        <Button asChild size="lg">
-          <Link href="/dashboard/listings/new">
-            <Plus className="h-5 w-5 mr-2" aria-hidden="true" />
-            Add New Listing
-          </Link>
+        <Button
+          size="lg"
+          nativeButton={false}
+          render={<Link href="/dashboard/listings/new" />}
+        >
+          <Plus className="size-5" aria-hidden="true" />
+          Add New Listing
         </Button>
       </div>
 
@@ -145,82 +147,74 @@ export default async function DashboardPage() {
           <CardContent className="space-y-3">
             <Button
               variant="outline"
-              className="w-full justify-between h-auto py-4"
-              asChild
+              className="w-full justify-between h-auto gap-4 px-4 py-4 text-left whitespace-normal"
+              nativeButton={false}
+              render={<Link href="/dashboard/listings/new" />}
             >
-              <Link href="/dashboard/listings/new">
-                <span className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                    <Plus className="h-5 w-5 text-primary" aria-hidden="true" />
-                  </div>
-                  <span>
-                    <span className="block font-semibold">
-                      Create New Listing
-                    </span>
-                    <span className="block text-xs text-muted-foreground">
-                      Add a new property to your portfolio
-                    </span>
+              <span className="flex min-w-0 items-center gap-3">
+                <div className="w-10 h-10 shrink-0 rounded-lg bg-primary/10 flex items-center justify-center">
+                  <Plus className="h-5 w-5 text-primary" aria-hidden="true" />
+                </div>
+                <span>
+                  <span className="block font-semibold">
+                    Create New Listing
+                  </span>
+                  <span className="block text-xs text-muted-foreground">
+                    Add a new property to your portfolio
                   </span>
                 </span>
-                <ArrowRight
-                  className="h-5 w-5 text-muted-foreground"
-                  aria-hidden="true"
-                />
-              </Link>
+              </span>
+              <ArrowRight
+                className="h-5 w-5 text-muted-foreground"
+                aria-hidden="true"
+              />
             </Button>
             <Button
               variant="outline"
-              className="w-full justify-between h-auto py-4"
-              asChild
+              className="w-full justify-between h-auto gap-4 px-4 py-4 text-left whitespace-normal"
+              nativeButton={false}
+              render={<Link href="/dashboard/listings" />}
             >
-              <Link href="/dashboard/listings">
-                <span className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-secondary/20 flex items-center justify-center">
-                    <Home
-                      className="h-5 w-5 text-secondary"
-                      aria-hidden="true"
-                    />
-                  </div>
-                  <span>
-                    <span className="block font-semibold">
-                      View All Listings
-                    </span>
-                    <span className="block text-xs text-muted-foreground">
-                      Manage your property listings
-                    </span>
+              <span className="flex min-w-0 items-center gap-3">
+                <div className="w-10 h-10 shrink-0 rounded-lg bg-secondary/20 flex items-center justify-center">
+                  <Home className="h-5 w-5 text-secondary" aria-hidden="true" />
+                </div>
+                <span>
+                  <span className="block font-semibold">View All Listings</span>
+                  <span className="block text-xs text-muted-foreground">
+                    Manage your property listings
                   </span>
                 </span>
-                <ArrowRight
-                  className="h-5 w-5 text-muted-foreground"
-                  aria-hidden="true"
-                />
-              </Link>
+              </span>
+              <ArrowRight
+                className="h-5 w-5 text-muted-foreground"
+                aria-hidden="true"
+              />
             </Button>
             <Button
               variant="outline"
-              className="w-full justify-between h-auto py-4"
-              asChild
+              className="w-full justify-between h-auto gap-4 px-4 py-4 text-left whitespace-normal"
+              nativeButton={false}
+              render={<Link href="/dashboard/leads" />}
             >
-              <Link href="/dashboard/leads">
-                <span className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                    <MessageSquare
-                      className="h-5 w-5 text-primary"
-                      aria-hidden="true"
-                    />
-                  </div>
-                  <span>
-                    <span className="block font-semibold">View Lead Inbox</span>
-                    <span className="block text-xs text-muted-foreground">
-                      Respond to buyer inquiries
-                    </span>
+              <span className="flex min-w-0 items-center gap-3">
+                <div className="w-10 h-10 shrink-0 rounded-lg bg-primary/10 flex items-center justify-center">
+                  <MessageSquare
+                    className="h-5 w-5 text-primary"
+                    aria-hidden="true"
+                  />
+                </div>
+                <span>
+                  <span className="block font-semibold">View Lead Inbox</span>
+                  <span className="block text-xs text-muted-foreground">
+                    Respond to buyer inquiries
                   </span>
                 </span>
-                <ArrowRight
-                  className="h-5 w-5 text-muted-foreground"
-                  aria-hidden="true"
-                />
-              </Link>
+              </span>
+              <ArrowRight
+                className="h-5 w-5 text-muted-foreground"
+                aria-hidden="true"
+              />
             </Button>
           </CardContent>
         </Card>
@@ -245,11 +239,13 @@ export default async function DashboardPage() {
                 </span>{" "}
                 waiting for your response.
               </p>
-              <Button asChild size="lg">
-                <Link href="/dashboard/leads">
-                  View Leads
-                  <ArrowRight className="ml-2 h-5 w-5" aria-hidden="true" />
-                </Link>
+              <Button
+                size="lg"
+                nativeButton={false}
+                render={<Link href="/dashboard/leads" />}
+              >
+                View Leads
+                <ArrowRight className="size-5" aria-hidden="true" />
               </Button>
             </CardContent>
           </Card>
@@ -265,11 +261,13 @@ export default async function DashboardPage() {
                 You have no pending leads. Keep your listings updated to attract
                 more buyers.
               </p>
-              <Button variant="outline" asChild>
-                <Link href="/dashboard/listings">
-                  Review Listings
-                  <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
-                </Link>
+              <Button
+                variant="outline"
+                nativeButton={false}
+                render={<Link href="/dashboard/listings" />}
+              >
+                Review Listings
+                <ArrowRight className="size-4" aria-hidden="true" />
               </Button>
             </CardContent>
           </Card>
