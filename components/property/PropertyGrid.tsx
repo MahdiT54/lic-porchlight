@@ -16,7 +16,8 @@ export function PropertyGrid({
   onSave,
   savedIds = [],
   showRemoveButton,
-}: PropertyGridProps) {
+}: PropertyGridProps) 
+{
   if (properties.length === 0) {
     return (
       <div className="text-center py-12">
@@ -29,7 +30,7 @@ export function PropertyGrid({
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
       {properties.map((property) => (
         <PropertyCard
-          key={property._id}
+          key={property._id} // primary key for React list rendering
           property={property}
           onSave={onSave}
           isSaved={savedIds.includes(property._id)}

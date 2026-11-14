@@ -1,5 +1,6 @@
 "use server";
 
+import { auth } from "@clerk/nextjs/server";
 import { client } from "@/sanity/lib/client";
 import type { User } from "@/sanity.types";
 
@@ -10,6 +11,11 @@ export type UploadedImage = Required<
 export async function uploadImageToSanity(
   formData: FormData,
 ): Promise<UploadedImage> {
+  const { isAuthenticated } = await auth();
+  if (!isAuthenticated) {
+    throw new Error("You must be signed in to upload images.");
+  }
+
   const file = formData.get("file") as File;
 
   if (!file) {
@@ -37,6 +43,11 @@ export async function uploadImageToSanity(
 export async function uploadMultipleImagesToSanity(
   formData: FormData,
 ): Promise<UploadedImage[]> {
+  const { isAuthenticated } = await auth();
+  if (!isAuthenticated) {
+    throw new Error("You must be signed in to upload images.");
+  }
+
   const files = formData.getAll("files") as File[];
 
   if (!files.length) {
@@ -63,6 +74,11 @@ export async function uploadMultipleImagesToSanity(
 }
 
 export async function deleteImageFromSanity(assetId: string): Promise<void> {
+  const { isAuthenticated } = await auth();
+  if (!isAuthenticated) {
+    throw new Error("You must be signed in to delete images.");
+  }
+
   try {
     await client.delete(assetId);
   } catch (error) {

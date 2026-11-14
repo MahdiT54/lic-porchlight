@@ -124,9 +124,12 @@ export default async function HomePage() {
               <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
             </Button>
           </div>
-
-          {featuredProperties && featuredProperties.length > 0 ? (
-            <PropertyGrid properties={featuredProperties} />
+{/* sanityFetch returns data
+→ HomePage names it featuredProperties
+→ HomePage passes it as the properties prop
+→ PropertyGrid receives it as properties */}
+          {featuredProperties && featuredProperties.length > 0 ? ( // Check if there are featured properties available. If so, render the PropertyGrid component with the featured properties data. If not, display a message indicating that no featured properties are available at the moment.
+            <PropertyGrid properties={featuredProperties}/>
           ) : (
             <div className="text-center py-16 bg-accent/50 rounded-2xl border border-border/50">
               <Home

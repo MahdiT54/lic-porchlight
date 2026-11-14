@@ -86,6 +86,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
   return (
     <ClerkProvider>
       <html
@@ -118,3 +119,17 @@ export default function RootLayout({
     </ClerkProvider>
   );
 }
+
+// { children }: { children: React.ReactNode } React.ReactNode is a type that represents any valid React child, including elements, strings, numbers, fragments, portals, and arrays of these types. It is used to type the children prop in React components, allowing for flexible and dynamic content rendering.
+
+// app/layout.tsx
+// app/(main)/layout.tsx
+
+// <RootLayout>
+//   <MainLayout>
+//     <HomePage />
+//   </MainLayout>
+// </RootLayout>
+
+// RootLayout’s children is <MainLayout>…</MainLayout>.
+// MainLayout’s children is <HomePage />.
