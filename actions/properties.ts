@@ -1,7 +1,7 @@
 "use server";
 
 import { auth } from "@clerk/nextjs/server";
-import { redirect } from "next/navigation";
+// import { redirect } from "next/navigation";
 import {
   AGENT_ID_BY_USER_QUERY,
   PROPERTY_AGENT_REF_QUERY,
@@ -68,7 +68,7 @@ export async function createListing(data: ListingInput) {
     updatedAt: new Date().toISOString(),
   });
 
-  redirect("/dashboard/listings");
+  // redirect("/dashboard/listings");
 }
 
 export async function updateListing(listingId: string, data: ListingInput) {

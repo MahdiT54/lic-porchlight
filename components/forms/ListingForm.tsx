@@ -53,6 +53,7 @@ import type {
   LISTING_BY_ID_QUERY_RESULT,
 } from "@/sanity.types";
 import type { GeoPoint } from "@/types";
+import{ useRouter } from "next/navigation";
 
 type Amenity = AMENITIES_QUERY_RESULT[number];
 export type { Amenity };
@@ -97,6 +98,7 @@ export function ListingForm({
 }: ListingFormProps) {
   const listing = stegaClean(rawListing);
   const [isPending, startTransition] = useTransition();
+  const router = useRouter();
 
   // Initialize images from listing data
   const initialImages: ImageItem[] =
@@ -218,6 +220,7 @@ export function ListingForm({
         } else {
           await createListing(formData);
           toast.success("Listing created successfully");
+          router.push("/dashboard/listings");
         }
       } catch (_error) {
         toast.error("Failed to save listing");

@@ -123,6 +123,7 @@ async function seedAmenities() {
   console.log(`\n✅ Seeded ${amenities.length} amenities.\n`);
 }
 
+// writes directly into Sanity **************
 async function seedAgents() {
   console.log("\n👥 Seeding agents...\n");
 
