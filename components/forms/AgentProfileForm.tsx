@@ -98,22 +98,32 @@ export function AgentProfileForm({
         <FormField
           control={form.control}
           name="bio"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Professional Bio</FormLabel>
-              <FormControl>
-                <Textarea
-                  placeholder="Tell potential clients about your experience..."
-                  rows={5}
-                  {...field}
-                />
-              </FormControl>
-              <FormDescription>
-                This will be displayed on your listings
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
+          render={({ field }) => {
+            const remainingChars = 50 - (field.value?.length || 0);
+            return (
+              <FormItem>
+                <FormLabel>Professional Bio</FormLabel>
+                <FormControl>
+                  <Textarea
+                    placeholder="Tell potential clients about your experience..."
+                    rows={5}
+                    {...field}
+                  />
+                </FormControl>
+                {field.value.length > 0 && field.value.length < 50 && (
+                  <p className="text-sm text-destructive" role="alert">
+                    Your bio needs {remainingChars} more{" "}
+                    {remainingChars === 1 ? "character" : "characters"} to meet
+                    the minimum length of 50 characters.
+                  </p>
+                )}
+                <FormDescription>
+                  This will be displayed on your listings
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            );
+          }}
         />
 
         <FormField
