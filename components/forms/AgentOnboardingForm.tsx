@@ -62,6 +62,9 @@ export function AgentOnboardingForm() {
     });
   };
 
+  const bio = form.watch("bio");
+  const remainingChars = 50 - bio.length;
+
   return (
     <Card>
       <CardContent className="pt-6">
@@ -80,6 +83,13 @@ export function AgentOnboardingForm() {
                       {...field}
                     />
                   </FormControl>
+                  {bio.length > 0 && bio.length < 50 && (
+                    <p className="text-sm text-destructive" role="alert">
+                      Your bio needs {remainingChars} more{" "}
+                      {remainingChars === 1 ? "character" : "characters"} to
+                      meet the minimum length of 50 characters.
+                    </p>
+                  )}
                   <FormDescription>
                     This will be displayed on your listings
                   </FormDescription>
