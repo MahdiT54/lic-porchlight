@@ -47,7 +47,8 @@ export async function createAgentDocument() {
   }
 
   // Create agent document
-  const agent = await client.create({
+  const agent = await client.createIfNotExists({
+    _id: `agent.${userId}`,
     _type: "agent",
     userId,
     name: `${user.firstName || ""} ${user.lastName || ""}`.trim() || "Agent",
