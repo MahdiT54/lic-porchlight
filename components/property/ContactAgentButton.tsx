@@ -11,16 +11,19 @@ interface ContactAgentButtonProps {
   propertyId: string;
   agentId: string;
   isAuthenticated: boolean;
+  hasExistingRequest: boolean;
 }
 
 export function ContactAgentButton({
   propertyId,
   agentId,
   isAuthenticated,
+  hasExistingRequest,
 }: ContactAgentButtonProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
-  const [isContacted, setIsContacted] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const isContacted = hasExistingRequest || isSubmitted;
 
   const handleClick = () => {
     if (!isAuthenticated) {
@@ -37,7 +40,7 @@ export function ContactAgentButton({
           return;
         }
         if (result.success) {
-          setIsContacted(true);
+          setIsSubmitted(true);
           toast.success(
             "Contact request sent! The agent will reach out to you soon.",
           );

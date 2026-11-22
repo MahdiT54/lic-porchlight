@@ -22,7 +22,12 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { StatBadge } from "@/components/ui/stat-badge";
 import { sanityFetch } from "@/sanity/lib/live";
-import { PROPERTY_DETAIL_QUERY } from "@/lib/sanity/queries";
+import {
+  AGENT_BY_USER_ID_QUERY,
+  LEAD_EXISTS_QUERY,
+  PROPERTY_DETAIL_QUERY,
+  USER_CONTACT_QUERY,
+} from "@/lib/sanity/queries";
 
 export async function generateMetadata({
   params,
@@ -44,10 +49,10 @@ export async function generateMetadata({
     property.price === null
       ? "Price unavailable"
       : new Intl.NumberFormat("en-US", {
-          style: "currency",
-          currency: "USD",
-          maximumFractionDigits: 0,
-        }).format(property.price);
+        style: "currency",
+        currency: "USD",
+        maximumFractionDigits: 0,
+      }).format(property.price);
 
   return {
     title: `${property.title} - ${price}`,
@@ -73,6 +78,43 @@ export default async function PropertyPage({
 
   if (!property) {
     notFound();
+  }
+
+  let hasExistingRequest = false;
+
+  if (userId && property.agent) {
+    // Both regular users and agents can contact an agent.
+    const [{ data: user }, { data: agent }] = await Promise.all([
+      sanityFetch({
+        query: USER_CONTACT_QUERY,
+        params: { clerkId: userId },
+        perspective: "published",
+        stega: false,
+      }),
+      sanityFetch({
+        query: AGENT_BY_USER_ID_QUERY,
+        params: { userId },
+        perspective: "published",
+        stega: false,
+      }),
+    ]);
+
+    // Use the same email selection as createLead.
+    const email = (user ?? agent)?.email;
+
+    if (email) {
+      const { data: existingLead } = await sanityFetch({
+        query: LEAD_EXISTS_QUERY,
+        params: {
+          propertyId: property._id,
+          email,
+        },
+        perspective: "published",
+        stega: false,
+      });
+
+      hasExistingRequest = Boolean(existingLead);
+    }
   }
 
   const formatPrice = (price: number | null) => {
@@ -280,9 +322,11 @@ export default async function PropertyPage({
               {property.agent && (
                 <AgentCard agent={property.agent}>
                   <ContactAgentButton
+                    key={`${userId}:${property._id}:${property.agent._id}`}
                     propertyId={property._id}
                     agentId={property.agent._id}
                     isAuthenticated={!!userId}
+                    hasExistingRequest={hasExistingRequest}
                   />
                 </AgentCard>
               )}
