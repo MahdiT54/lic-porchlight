@@ -6,6 +6,7 @@ import { useState, useTransition } from "react";
 import { toast } from "sonner";
 import { createLead } from "@/actions/leads";
 import { Button } from "@/components/ui/button";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
 
 interface ContactAgentButtonProps {
   propertyId: string;
@@ -60,18 +61,46 @@ export function ContactAgentButton({
 
   if (isOwnListing) {
     return (
-      <Button className="w-full" disabled>
-        Your Listing
-      </Button>
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger
+            render={<span />}
+            tabIndex={0}
+            className="block w-full"
+          >
+            <Button className="w-full" disabled>
+              Your Listing
+            </Button>
+          </TooltipTrigger>
+
+          <TooltipContent side="bottom">
+            This is your own listing.
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
     );
   }
 
   if (isContacted) {
     return (
-      <Button className="w-full" disabled>
-        <Check className="h-5 w-5 mr-2" />
-        Request Sent
-      </Button>
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger
+            render={<span />}
+            tabIndex={0}
+            className="block w-full"
+          >
+            <Button className="w-full" disabled>
+              <Check className="h-5 w-5 mr-2" />
+              Request Sent
+            </Button>
+          </TooltipTrigger>
+
+          <TooltipContent side="bottom">
+            You've already sent a contact request to this agent.
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
     );
   }
 
