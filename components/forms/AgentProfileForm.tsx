@@ -1,6 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useUser } from "@clerk/nextjs";
 import { useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -35,6 +36,8 @@ export function AgentProfileForm({
   agent: NonNullable<AGENT_PROFILE_QUERY_RESULT>;
 }) {
   const [isPending, startTransition] = useTransition();
+  const { user } = useUser();
+  const displayName = user?.fullName || agent.name;
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -71,7 +74,7 @@ export function AgentProfileForm({
           </label>
           <Input
             id="agent-name"
-            value={agent.name}
+            value={displayName}
             disabled
             className="bg-muted"
           />
