@@ -85,6 +85,20 @@ export async function createLead(
     throw new Error("Not authenticated");
   }
 
+  const { data: currentAgent } = await sanityFetch({
+    query: AGENT_ID_BY_USER_QUERY,
+    params: { userId },
+    perspective: "published",
+    stega: false,
+  });
+
+  if (currentAgent?._id === agentId) {
+    return {
+      success: false,
+      message: "You can't send yourself a contact request to your own listing.",
+    };
+  }
+
   // Check/sync onboarding status and get user contact info
   const user = await ensureOnboardingComplete(userId);
 

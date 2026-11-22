@@ -80,9 +80,13 @@ export default async function PropertyPage({
     notFound();
   }
 
+  const isOwnListing = Boolean(
+    userId && property.agent?.userId === userId,
+  );
+
   let hasExistingRequest = false;
 
-  if (userId && property.agent) {
+  if (userId && property.agent && !isOwnListing) {
     // Both regular users and agents can contact an agent.
     const [{ data: user }, { data: agent }] = await Promise.all([
       sanityFetch({
@@ -327,6 +331,7 @@ export default async function PropertyPage({
                     agentId={property.agent._id}
                     isAuthenticated={!!userId}
                     hasExistingRequest={hasExistingRequest}
+                    isOwnListing={isOwnListing}
                   />
                 </AgentCard>
               )}

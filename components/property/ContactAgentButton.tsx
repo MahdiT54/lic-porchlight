@@ -12,6 +12,7 @@ interface ContactAgentButtonProps {
   agentId: string;
   isAuthenticated: boolean;
   hasExistingRequest: boolean;
+  isOwnListing: boolean;
 }
 
 export function ContactAgentButton({
@@ -19,6 +20,7 @@ export function ContactAgentButton({
   agentId,
   isAuthenticated,
   hasExistingRequest,
+  isOwnListing,
 }: ContactAgentButtonProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
@@ -26,6 +28,7 @@ export function ContactAgentButton({
   const isContacted = hasExistingRequest || isSubmitted;
 
   const handleClick = () => {
+    if (isOwnListing) return;
     if (!isAuthenticated) {
       router.push("/sign-in");
       return;
@@ -39,6 +42,10 @@ export function ContactAgentButton({
           router.push("/onboarding");
           return;
         }
+        if (!result.success) {
+          toast.error(result.message ?? "Failed to contact agent. Please try again.");
+          return;
+        }
         if (result.success) {
           setIsSubmitted(true);
           toast.success(
@@ -50,6 +57,14 @@ export function ContactAgentButton({
       }
     });
   };
+
+  if (isOwnListing) {
+    return (
+      <Button className="w-full" disabled>
+        Your Listing
+      </Button>
+    );
+  }
 
   if (isContacted) {
     return (
