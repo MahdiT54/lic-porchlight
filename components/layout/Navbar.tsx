@@ -60,7 +60,7 @@ export function Navbar() {
             <Show when="signed-in">
               <Show
                 when={{ plan: "agent" }}
-                fallback={
+                fallback={ // if not signed in, show the "Become an Agent" link
                   <Link
                     href="/pricing"
                     className="px-4 py-2 text-sm font-medium text-muted-foreground rounded-lg hover:text-foreground hover:bg-accent transition-[color,background-color] duration-200"
